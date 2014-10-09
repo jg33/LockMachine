@@ -146,6 +146,7 @@
 		886405B019E4781300408336 /* ParticleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 886405AE19E4781300408336 /* ParticleScene.cpp */; };
 		888680F119E6170200A9FB4B /* CircleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680EF19E6170200A9FB4B /* CircleScene.cpp */; };
 		888680F619E6175F00A9FB4B /* Circle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680F419E6175F00A9FB4B /* Circle.cpp */; };
+		88A3AAAB19E66B60001FD7AE /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88A3AAA919E66B60001FD7AE /* Particle.cpp */; };
 		899BAF53175868463FE1B029 /* RecursiveDirectoryIteratorStategies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F27637AABA89A235C5974D56 /* RecursiveDirectoryIteratorStategies.cpp */; };
 		8D60C222CBD3F869382832E9 /* ofxSyphonServer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 32D6F27DC6308427F9A278C1 /* ofxSyphonServer.mm */; };
 		8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81967292BFC87A0144BD32C6 /* ofxOscSender.cpp */; };
@@ -556,6 +557,8 @@
 		888680F319E6171F00A9FB4B /* Scenes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scenes.h; path = scenes/Scenes.h; sourceTree = "<group>"; };
 		888680F419E6175F00A9FB4B /* Circle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Circle.cpp; sourceTree = "<group>"; };
 		888680F519E6175F00A9FB4B /* Circle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circle.h; sourceTree = "<group>"; };
+		88A3AAA919E66B60001FD7AE /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		88A3AAAA19E66B60001FD7AE /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
 		89B60FB247E1F64013C716DC /* AbstractTypes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = AbstractTypes.h; path = ../../../addons/ofxIO/libs/ofxIO/include/ofx/IO/AbstractTypes.h; sourceTree = SOURCE_ROOT; };
 		8B30E93FD3D3475EED522A0E /* ofxOscBundle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscBundle.h; path = ../../../addons/ofxOsc/src/ofxOscBundle.h; sourceTree = SOURCE_ROOT; };
 		8C75AFC8774A62495DD53464 /* ofxOscReceiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscReceiver.h; path = ../../../addons/ofxOsc/src/ofxOscReceiver.h; sourceTree = SOURCE_ROOT; };
@@ -1443,14 +1446,14 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
-				8864053A19E46A0500408336 /* Syphon.framework */,
-				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
-				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
 				E4B69B5B0A3A1756003C02F2 /* StringMachineDebug.app */,
+				8864053A19E46A0500408336 /* Syphon.framework */,
+				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
+				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1461,6 +1464,8 @@
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				888680F219E6170B00A9FB4B /* scenes */,
+				88A3AAA919E66B60001FD7AE /* Particle.cpp */,
+				88A3AAAA19E66B60001FD7AE /* Particle.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1683,6 +1688,7 @@
 				8864049519E4671B00408336 /* ofxRParticleRenderer.cpp in Sources */,
 				886405A519E46CBE00408336 /* guiTypeToggle.cpp in Sources */,
 				8864048E19E4671B00408336 /* ofxLorentzBehavior.cpp in Sources */,
+				88A3AAAB19E66B60001FD7AE /* Particle.cpp in Sources */,
 				8864049819E4671B00408336 /* ofxSphericalAttractionBehavior.cpp in Sources */,
 				8864052519E4672100408336 /* ofxUIToggleMatrix.cpp in Sources */,
 				8864050C19E4672100408336 /* ofxUIImageSampler.cpp in Sources */,
@@ -1831,6 +1837,7 @@
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
+					"-DOFX_APP_UTILS_USE_CONTROL_PANEL",
 				);
 				SDKROOT = macosx;
 			};
@@ -1909,6 +1916,7 @@
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
+					"-DOFX_APP_UTILS_USE_CONTROL_PANEL",
 				);
 				SDKROOT = macosx;
 			};
@@ -1996,7 +2004,6 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
-				OFX_APP_UTILS_USE_CONTROL_PANEL = "";
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
@@ -2084,7 +2091,6 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 				);
-				OFX_APP_UTILS_USE_CONTROL_PANEL = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;

@@ -7,3 +7,18 @@
 //
 
 #include "ParticleScene.h"
+
+void ParticleScene::setup(){
+    pBoss = ofxParticleManager();
+    
+}
+
+void ParticleScene::update(){
+    pBoss.addParticle(new Particle());
+    pBoss.update();
+}
+
+void ParticleScene::draw(){
+    ofBackground(0);
+    pBoss.draw();
+}

@@ -11,18 +11,21 @@
 
 #include <iostream>
 #include "ofxAppUtils.h"
+#include "Particle.h"
+
 
 class ParticleScene : public ofxScene{
     
 public:
     ParticleScene():ofxScene("Particles"){};
-    void setup(){};
-    void update(){};
-    void draw(){};
+    void setup();
+    void update();
+    void draw();
     
     
 private:
     
+    ofxParticleManager pBoss;
     
 };
 

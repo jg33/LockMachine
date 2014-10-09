@@ -8,8 +8,13 @@ void ofApp::setup(){
     setSceneManager(&sceneManager);
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     sceneManager.add(new ParticleScene());
-    sceneManager.gotoScene("Circles");
-
+    sceneManager.gotoScene("Particles");
+    
+    addTransformControls();
+    setDrawControlPanel(true);
+    setDrawFramerate(true);
+    
+    cout<< isDebug()<<endl;
 }
 
 //--------------------------------------------------------------
@@ -32,18 +37,20 @@ void ofApp::update(){
     
     circles->setSizes(micInputs);
     
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
     syphonServe.publishScreen();
+    
+    //drawControlPanel();
+    //drawFramerate(10, 10);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    bDebug=true;
 }
 
 //--------------------------------------------------------------
@@ -73,7 +80,7 @@ void ofApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    setNewScreenSize(w, h);
 }
 
 //--------------------------------------------------------------

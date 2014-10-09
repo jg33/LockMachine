@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 #include "ofMain.h"
 #include "ofxAppUtils.h"
 #include "ofxSyphon.h"
@@ -26,7 +28,8 @@ class ofApp : public ofxApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-    
+       
+
 private:
     ofxSyphonServer syphonServe;
     ofxOscReceiver oscIn;
@@ -36,4 +39,5 @@ private:
     
     map<int,float> micInputs;
     map<int,ofVec3f> dancers;
+    
 };
