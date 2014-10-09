@@ -1,8 +1,15 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxAppUtils.h"
+#include "ofxSyphon.h"
+#include "ofxOsc.h"
 
-class ofApp : public ofBaseApp{
+#include "Scenes.h"
+
+class CircleScene;
+
+class ofApp : public ofxApp{
 
 	public:
 		void setup();
@@ -19,4 +26,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+    
+private:
+    ofxSyphonServer syphonServe;
+    ofxOscReceiver oscIn;
+    
+    ofxSceneManager sceneManager;
+    CircleScene * circles;
+    
+    map<int,float> micInputs;
+    map<int,ofVec3f> dancers;
 };

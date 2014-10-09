@@ -2,17 +2,43 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    syphonServe.setName("String Machine");
+    oscIn.setup(6666);
+    
+    setSceneManager(&sceneManager);
+    circles = (CircleScene*) sceneManager.add(new CircleScene());
+    sceneManager.add(new ParticleScene());
+    sceneManager.gotoScene("Circles");
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    ofxOscMessage msg;
+    
+    while (oscIn.hasWaitingMessages()){
+        oscIn.getNextMessage(&msg);
+        vector<string> address = ofSplitString(msg.getAddress(),"/");
 
+        if(address[1] == "mic"){
+            micInputs[ofToInt(address[2])]= msg.getArgAsFloat(0);
+            cout<< msg.getAddress() <<endl;
+            
+        } else if ( address[1] == "dancer"){
+            dancers[ofToInt(address[2])] = ofVec3f(msg.getArgAsFloat(0),msg.getArgAsFloat(1),msg.getArgAsFloat(2));
+        }
+        
+    }
+    
+    circles->setSizes(micInputs);
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    
+    syphonServe.publishScreen();
 }
 
 //--------------------------------------------------------------
