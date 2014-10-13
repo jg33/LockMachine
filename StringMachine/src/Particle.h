@@ -18,13 +18,20 @@ class Particle: public ofxParticle{
 public:
     Particle(): ofxParticle(){setup();};
     
-    void setup();
+    virtual void setup(){};
     void update();
-    void draw();
+    virtual void draw(){};
     
-private:
+    virtual void customUpdate(){};
+    virtual void customDraw(){};
+    
+    void attractToward(ofVec3f attractor, float force);
+    
+protected:
     ofVec3f pos, vel, acc;
     int seed;
+    float drag;
+    float size, maxSize;
     
 };
 

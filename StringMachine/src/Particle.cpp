@@ -8,24 +8,22 @@
 
 #include "Particle.h"
 
-void Particle::setup(){
-    lifespan = ofRandom(10000);
-    pos = ofVec3f(ofRandom(ofGetWidth()),ofRandom( ofGetHeight()));
-    seed = ofRandom(10000);
-    
-}
 
 void Particle::update(){
     updateAge();
     
-    acc = ofVec3f(ofSignedNoise(seed+ofGetElapsedTimef()), ofSignedNoise(600+seed+ofGetElapsedTimef()));
+    float sizeDragFactor = ofMap(size,0,maxSize,0.1,1);
     
     vel+=acc;
+    vel*= (1- (drag*sizeDragFactor));
     pos+=vel;
+    
+    customUpdate();
 }
 
-void Particle::draw(){
-    ofSetColor(255);
-    ofCircle(pos, 10) ;
-
+void Particle::attractToward(ofVec3f v, float f){
+    ofVec3f distToTarget = v-pos;
+    float distFactor = ofClamp(ofMap(distToTarget.length(),0,500,1,0),0,1 );
+    acc += distToTarget*0.1*f*distFactor;
+    
 }

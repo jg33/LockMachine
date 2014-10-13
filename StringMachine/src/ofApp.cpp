@@ -4,6 +4,7 @@
 void ofApp::setup(){
     syphonServe.setName("String Machine");
     oscIn.setup(6666);
+    ofSetVerticalSync(true);
     
     setSceneManager(&sceneManager);
     circles = (CircleScene*) sceneManager.add(new CircleScene());

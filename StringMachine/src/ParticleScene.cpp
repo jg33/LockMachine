@@ -10,12 +10,15 @@
 
 void ParticleScene::setup(){
     pBoss = ofxParticleManager();
-    
+    attractive.setup(pBoss.getParticlesPtr());
 }
 
 void ParticleScene::update(){
-    pBoss.addParticle(new Particle());
+    pBoss.addParticle(new CirclePart());
     pBoss.update();
+    
+    attractive.update();
+    attractive.setPosition(ofGetMouseX(), ofGetMouseY(), 0);
 }
 
 void ParticleScene::draw(){
