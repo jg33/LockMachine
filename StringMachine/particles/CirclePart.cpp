@@ -17,6 +17,7 @@ void CirclePart::setup(){
     size = ofRandom(1,maxSize);
     drag = 0.1;
     
+    
 }
 
 void CirclePart::customUpdate(){
@@ -29,8 +30,9 @@ void CirclePart::draw(){
     if (getAge() > (lifespan*0.9) || getAge()==0){
         ofSetColor( ofClamp(ofMap(getAge(),lifespan*0.9,lifespan,255,0),0,255) ) ;
     }else{
-        ofSetColor(255);
+        ofSetColor(color);
     }
     ofCircle(pos, size) ;
     
 }
+

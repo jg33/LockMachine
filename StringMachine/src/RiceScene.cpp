@@ -1,17 +1,16 @@
 //
-//  ParticleScene.cpp
+//  RiceScene.cpp
 //  StringMachine
 //
-//  Created by Jesse Garrison on 10/7/14.
+//  Created by Jesse Garrison on 10/14/14.
 //
 //
 
-#include "ParticleScene.h"
+#include "RiceScene.h"
 
-void ParticleScene::setup(){
+void RiceScene::setup(){
     pBoss = ofxParticleManager();
-    attractive.setup(pBoss.getParticlesPtr());
-    cout<<"setup particles!"<<endl;
+    cout<<"setup rice!"<<endl;
     finishedEntering();
     
     ofColor primaryColor = ofColor::goldenRod;
@@ -20,19 +19,17 @@ void ParticleScene::setup(){
     
 }
 
-void ParticleScene::update(){
+void RiceScene::update(){
     ofColor thisColor = pallette.at(floor(ofRandom(pallette.size())));
-    pBoss.addParticle(new CirclePart(thisColor));
+    pBoss.addParticle(new Rice(thisColor));
     pBoss.update();
     
-    attractive.update();
-    attractive.setPosition(ofGetMouseX(), ofGetMouseY(), 0);
     
 }
 
-void ParticleScene::draw(){
+void RiceScene::draw(){
     ofBackground(0);
     pBoss.draw();
     
-
+    
 }

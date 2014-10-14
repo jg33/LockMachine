@@ -14,11 +14,14 @@
 
 class CirclePart:public Particle{
 public:
-    CirclePart():Particle(){setup();};
+    CirclePart():Particle(){color = ofRandom(255);setup();};
+    CirclePart(ofColor _color){color = _color;setup();};
     
     void setup();
     void customUpdate();
     void draw();
+    
+    ofColor color;
     
     
 };

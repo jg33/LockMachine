@@ -10,7 +10,8 @@ void ofApp::setup(){
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     connections = (ConnectorScene*) sceneManager.add(new ConnectorScene());
     sceneManager.add(new ParticleScene());
-    sceneManager.gotoScene("Connections", true);
+    sceneManager.add(new RiceScene());
+    sceneManager.gotoScene("Rice", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     setSceneManager(&sceneManager);

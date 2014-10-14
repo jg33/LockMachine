@@ -147,6 +147,8 @@
 		888680F119E6170200A9FB4B /* CircleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680EF19E6170200A9FB4B /* CircleScene.cpp */; };
 		888680F619E6175F00A9FB4B /* Circle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680F419E6175F00A9FB4B /* Circle.cpp */; };
 		88A3AAAB19E66B60001FD7AE /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88A3AAA919E66B60001FD7AE /* Particle.cpp */; };
+		88A8559E19ED8FA0005AF18C /* Rice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88A8559C19ED8FA0005AF18C /* Rice.cpp */; };
+		88A855A119ED9184005AF18C /* RiceScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88A8559F19ED9184005AF18C /* RiceScene.cpp */; };
 		88C372FD19EC5CDF00FBDED8 /* ConnectorScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88C372FB19EC5CDF00FBDED8 /* ConnectorScene.cpp */; };
 		88D76BA419E8A0DC00D870B0 /* CirclePart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D76BA219E8A0DC00D870B0 /* CirclePart.cpp */; };
 		88D76BA819E8A3AB00D870B0 /* Attractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D76BA619E8A3AB00D870B0 /* Attractor.cpp */; };
@@ -562,6 +564,10 @@
 		888680F519E6175F00A9FB4B /* Circle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circle.h; sourceTree = "<group>"; };
 		88A3AAA919E66B60001FD7AE /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
 		88A3AAAA19E66B60001FD7AE /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		88A8559C19ED8FA0005AF18C /* Rice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rice.cpp; sourceTree = "<group>"; };
+		88A8559D19ED8FA0005AF18C /* Rice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rice.h; sourceTree = "<group>"; };
+		88A8559F19ED9184005AF18C /* RiceScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RiceScene.cpp; sourceTree = "<group>"; };
+		88A855A019ED9184005AF18C /* RiceScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RiceScene.h; sourceTree = "<group>"; };
 		88C372FB19EC5CDF00FBDED8 /* ConnectorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectorScene.cpp; path = scenes/ConnectorScene.cpp; sourceTree = "<group>"; };
 		88C372FC19EC5CDF00FBDED8 /* ConnectorScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectorScene.h; path = scenes/ConnectorScene.h; sourceTree = "<group>"; };
 		88D76BA219E8A0DC00D870B0 /* CirclePart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CirclePart.cpp; path = ../particles/CirclePart.cpp; sourceTree = "<group>"; };
@@ -1268,6 +1274,8 @@
 				888680F319E6171F00A9FB4B /* Scenes.h */,
 				888680F419E6175F00A9FB4B /* Circle.cpp */,
 				888680F519E6175F00A9FB4B /* Circle.h */,
+				88A8559F19ED9184005AF18C /* RiceScene.cpp */,
+				88A855A019ED9184005AF18C /* RiceScene.h */,
 			);
 			name = scenes;
 			sourceTree = "<group>";
@@ -1276,6 +1284,8 @@
 			isa = PBXGroup;
 			children = (
 				88D76BA219E8A0DC00D870B0 /* CirclePart.cpp */,
+				88A8559C19ED8FA0005AF18C /* Rice.cpp */,
+				88A8559D19ED8FA0005AF18C /* Rice.h */,
 				88D76BA319E8A0DC00D870B0 /* CirclePart.h */,
 				88D76BA619E8A3AB00D870B0 /* Attractor.cpp */,
 				88D76BA719E8A3AB00D870B0 /* Attractor.h */,
@@ -1697,6 +1707,7 @@
 				B7E0003B826CBA379A3F66E5 /* PathFilterCollection.cpp in Sources */,
 				E2C54FD4C85A860582282F7C /* RecursiveDirectoryIterator.cpp in Sources */,
 				8864050219E4672100408336 /* ofxUIButton.cpp in Sources */,
+				88A8559E19ED8FA0005AF18C /* Rice.cpp in Sources */,
 				899BAF53175868463FE1B029 /* RecursiveDirectoryIteratorStategies.cpp in Sources */,
 				8864059319E46CBE00408336 /* guiCallback.cpp in Sources */,
 				8864049119E4671B00408336 /* ofxRParticle.cpp in Sources */,
@@ -1709,6 +1720,7 @@
 				8864050919E4672100408336 /* ofxUIFPSSlider.cpp in Sources */,
 				8864052019E4672100408336 /* ofxUISuperCanvas.cpp in Sources */,
 				8864050419E4672100408336 /* ofxUICircleSlider.cpp in Sources */,
+				88A855A119ED9184005AF18C /* RiceScene.cpp in Sources */,
 				8864049519E4671B00408336 /* ofxRParticleRenderer.cpp in Sources */,
 				886405A519E46CBE00408336 /* guiTypeToggle.cpp in Sources */,
 				8864048E19E4671B00408336 /* ofxLorentzBehavior.cpp in Sources */,

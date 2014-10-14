@@ -12,5 +12,5 @@
 #include "ParticleScene.h"
 #include "CircleScene.h"
 #include "ConnectorScene.h"
-
+#include "RiceScene.h"
 #endif

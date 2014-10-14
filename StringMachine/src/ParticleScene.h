@@ -13,6 +13,7 @@
 #include "ofxAppUtils.h"
 #include "CirclePart.h"
 #include "Attractor.h"
+#include "ofxColourTheory.h"
 
 class ParticleScene : public ofxScene{
     
@@ -26,6 +27,9 @@ public:
 private:
     
     ofxParticleManager pBoss;
+    
+    ofxColourTheory colorMaker;
+    vector<ofColor> pallette;
     
 };
 
