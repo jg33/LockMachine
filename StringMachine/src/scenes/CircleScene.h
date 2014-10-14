@@ -20,7 +20,7 @@
 class CircleScene : public ofxScene{
     
 public:
-    CircleScene():ofxScene("Circles"){};
+    CircleScene():ofxScene("Circles"){setSingleSetup(false);};
     void setup();
     void update();
     void draw();

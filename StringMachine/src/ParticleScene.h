@@ -17,7 +17,7 @@
 class ParticleScene : public ofxScene{
     
 public:
-    ParticleScene():ofxScene("Particles"){};
+    ParticleScene():ofxScene("Particles"){setSingleSetup(false);};
     void setup();
     void update();
     void draw();

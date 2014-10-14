@@ -10,6 +10,7 @@
 #include "Scenes.h"
 
 class CircleScene;
+class ConnectorScene;
 
 class ofApp : public ofxApp{
 
@@ -27,8 +28,9 @@ class ofApp : public ofxApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
-       
+
+        void onGuiEvent(guiCallbackData & d);
+    
 
 private:
     ofxSyphonServer syphonServe;
@@ -36,8 +38,11 @@ private:
     
     ofxSceneManager sceneManager;
     CircleScene * circles;
+    ConnectorScene * connections;
     
     map<int,float> micInputs;
     map<int,ofVec3f> dancers;
+    map<int,ofVec3f> POIs;
+    map<int,float> POIpower;
     
 };

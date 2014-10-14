@@ -28,10 +28,9 @@ public:
     void attractToward(ofVec3f attractor, float force);
     
 protected:
-    ofVec3f pos, vel, acc;
+    float size, maxSize;
     int seed;
     float drag;
-    float size, maxSize;
     
 };
 

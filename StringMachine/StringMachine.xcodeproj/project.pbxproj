@@ -147,6 +147,9 @@
 		888680F119E6170200A9FB4B /* CircleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680EF19E6170200A9FB4B /* CircleScene.cpp */; };
 		888680F619E6175F00A9FB4B /* Circle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680F419E6175F00A9FB4B /* Circle.cpp */; };
 		88A3AAAB19E66B60001FD7AE /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88A3AAA919E66B60001FD7AE /* Particle.cpp */; };
+		88C372FD19EC5CDF00FBDED8 /* ConnectorScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88C372FB19EC5CDF00FBDED8 /* ConnectorScene.cpp */; };
+		88D76BA419E8A0DC00D870B0 /* CirclePart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D76BA219E8A0DC00D870B0 /* CirclePart.cpp */; };
+		88D76BA819E8A3AB00D870B0 /* Attractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D76BA619E8A3AB00D870B0 /* Attractor.cpp */; };
 		899BAF53175868463FE1B029 /* RecursiveDirectoryIteratorStategies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F27637AABA89A235C5974D56 /* RecursiveDirectoryIteratorStategies.cpp */; };
 		8D60C222CBD3F869382832E9 /* ofxSyphonServer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 32D6F27DC6308427F9A278C1 /* ofxSyphonServer.mm */; };
 		8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81967292BFC87A0144BD32C6 /* ofxOscSender.cpp */; };
@@ -559,6 +562,12 @@
 		888680F519E6175F00A9FB4B /* Circle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circle.h; sourceTree = "<group>"; };
 		88A3AAA919E66B60001FD7AE /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
 		88A3AAAA19E66B60001FD7AE /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		88C372FB19EC5CDF00FBDED8 /* ConnectorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectorScene.cpp; path = scenes/ConnectorScene.cpp; sourceTree = "<group>"; };
+		88C372FC19EC5CDF00FBDED8 /* ConnectorScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectorScene.h; path = scenes/ConnectorScene.h; sourceTree = "<group>"; };
+		88D76BA219E8A0DC00D870B0 /* CirclePart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CirclePart.cpp; path = ../particles/CirclePart.cpp; sourceTree = "<group>"; };
+		88D76BA319E8A0DC00D870B0 /* CirclePart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CirclePart.h; path = ../particles/CirclePart.h; sourceTree = "<group>"; };
+		88D76BA619E8A3AB00D870B0 /* Attractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Attractor.cpp; sourceTree = "<group>"; };
+		88D76BA719E8A3AB00D870B0 /* Attractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Attractor.h; sourceTree = "<group>"; };
 		89B60FB247E1F64013C716DC /* AbstractTypes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = AbstractTypes.h; path = ../../../addons/ofxIO/libs/ofxIO/include/ofx/IO/AbstractTypes.h; sourceTree = SOURCE_ROOT; };
 		8B30E93FD3D3475EED522A0E /* ofxOscBundle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscBundle.h; path = ../../../addons/ofxOsc/src/ofxOscBundle.h; sourceTree = SOURCE_ROOT; };
 		8C75AFC8774A62495DD53464 /* ofxOscReceiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscReceiver.h; path = ../../../addons/ofxOsc/src/ofxOscReceiver.h; sourceTree = SOURCE_ROOT; };
@@ -1212,8 +1221,8 @@
 				8864057119E46CBE00408336 /* guiTypeLogger.cpp */,
 				8864057219E46CBE00408336 /* guiTypeLogger.h */,
 				8864057319E46CBE00408336 /* guiTypeMultiToggle.cpp */,
-				8864057419E46CBE00408336 /* guiTypeMultiToggle.h */,
 				8864057519E46CBE00408336 /* guiTypePanel.cpp */,
+				8864057419E46CBE00408336 /* guiTypeMultiToggle.h */,
 				8864057619E46CBE00408336 /* guiTypePanel.h */,
 				8864057719E46CBE00408336 /* guiTypeSlider.cpp */,
 				8864057819E46CBE00408336 /* guiTypeSlider.h */,
@@ -1253,12 +1262,27 @@
 				886405AE19E4781300408336 /* ParticleScene.cpp */,
 				886405AF19E4781300408336 /* ParticleScene.h */,
 				888680EF19E6170200A9FB4B /* CircleScene.cpp */,
+				88C372FB19EC5CDF00FBDED8 /* ConnectorScene.cpp */,
+				88C372FC19EC5CDF00FBDED8 /* ConnectorScene.h */,
 				888680F019E6170200A9FB4B /* CircleScene.h */,
 				888680F319E6171F00A9FB4B /* Scenes.h */,
 				888680F419E6175F00A9FB4B /* Circle.cpp */,
 				888680F519E6175F00A9FB4B /* Circle.h */,
 			);
 			name = scenes;
+			sourceTree = "<group>";
+		};
+		88D76BA519E8A0F400D870B0 /* particles */ = {
+			isa = PBXGroup;
+			children = (
+				88D76BA219E8A0DC00D870B0 /* CirclePart.cpp */,
+				88D76BA319E8A0DC00D870B0 /* CirclePart.h */,
+				88D76BA619E8A3AB00D870B0 /* Attractor.cpp */,
+				88D76BA719E8A3AB00D870B0 /* Attractor.h */,
+				88A3AAA919E66B60001FD7AE /* Particle.cpp */,
+				88A3AAAA19E66B60001FD7AE /* Particle.h */,
+			);
+			name = particles;
 			sourceTree = "<group>";
 		};
 		8FE15F6815C4A8DE40915EAE /* lz4 */ = {
@@ -1463,9 +1487,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				88D76BA519E8A0F400D870B0 /* particles */,
 				888680F219E6170B00A9FB4B /* scenes */,
-				88A3AAA919E66B60001FD7AE /* Particle.cpp */,
-				88A3AAAA19E66B60001FD7AE /* Particle.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1617,6 +1640,7 @@
 				3BFC7CF50BEB0307821B90A6 /* lz4.c in Sources */,
 				8864052119E4672100408336 /* ofxUITabBar.cpp in Sources */,
 				8864050019E4672100408336 /* ofxUIBaseDraws.cpp in Sources */,
+				88D76BA819E8A3AB00D870B0 /* Attractor.cpp in Sources */,
 				8864053319E4675900408336 /* ofxXmlSettings.cpp in Sources */,
 				8864049A19E4671B00408336 /* ofxSpringSystem.cpp in Sources */,
 				8864052419E4672100408336 /* ofxUIToggle.cpp in Sources */,
@@ -1690,6 +1714,7 @@
 				8864048E19E4671B00408336 /* ofxLorentzBehavior.cpp in Sources */,
 				88A3AAAB19E66B60001FD7AE /* Particle.cpp in Sources */,
 				8864049819E4671B00408336 /* ofxSphericalAttractionBehavior.cpp in Sources */,
+				88D76BA419E8A0DC00D870B0 /* CirclePart.cpp in Sources */,
 				8864052519E4672100408336 /* ofxUIToggleMatrix.cpp in Sources */,
 				8864050C19E4672100408336 /* ofxUIImageSampler.cpp in Sources */,
 				8864055319E46CAE00408336 /* ofxSceneManager.cpp in Sources */,
@@ -1716,6 +1741,7 @@
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				8864050A19E4672100408336 /* ofxUIImage.cpp in Sources */,
+				88C372FD19EC5CDF00FBDED8 /* ConnectorScene.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
 				8864050D19E4672100408336 /* ofxUIImageSlider.cpp in Sources */,

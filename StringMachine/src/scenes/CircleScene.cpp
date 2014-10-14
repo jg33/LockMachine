@@ -21,10 +21,17 @@ void CircleScene::setup(){
     circles[3].setPosition(450, ofGetHeight()/2, 0);
     circles[4].setPosition(650, ofGetHeight()/2, 0);
     
+    for (int i = 0; i<circles.size(); i++){
+        circles[i].setSize(10);
+    }
+    
+    cout<<"setup circles!"<<endl;
+    finishedEntering();
+    
 }
 
 void CircleScene::update(){
-    
+
     
 }
 
@@ -47,5 +54,6 @@ void CircleScene::draw(){
         circles[i].draw();
     }
     
+
     
 }
