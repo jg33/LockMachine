@@ -1,0 +1,44 @@
+<transformPosition>
+    <val_0>0.000000000</val_0>
+    <val_1>0.000000000</val_1>
+</transformPosition>
+<transformZ>
+    <val_0>0.000000000</val_0>
+</transformZ>
+<transformAspect>
+    <val_0>0.000000000</val_0>
+</transformAspect>
+<transformCenter>
+    <val_0>0.000000000</val_0>
+</transformCenter>
+<transformMirrorX>
+    <val_0>0.000000000</val_0>
+</transformMirrorX>
+<transformMirrorY>
+    <val_0>0.000000000</val_0>
+</transformMirrorY>
+<transformEnableQuadWarper>
+    <val_0>0.000000000</val_0>
+</transformEnableQuadWarper>
+<transformEditQuadWarper>
+    <val_0>0.000000000</val_0>
+</transformEditQuadWarper>
+<transformSaveQuadWarper>
+    <val_0>0.000000000</val_0>
+</transformSaveQuadWarper>
+<POI0>
+    <val_0>588.799987793</val_0>
+    <val_1>549.119995117</val_1>
+</POI0>
+<POI1>
+    <val_0>558.080017090</val_0>
+    <val_1>395.519989014</val_1>
+</POI1>
+<POI2>
+    <val_0>419.839996338</val_0>
+    <val_1>499.199981689</val_1>
+</POI2>
+<POI3>
+    <val_0>512.000000000</val_0>
+    <val_1>384.000000000</val_1>
+</POI3>
