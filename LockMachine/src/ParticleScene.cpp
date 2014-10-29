@@ -10,9 +10,7 @@
 
 void ParticleScene::setup(){
     pBoss = ofxParticleManager();
-    attractive.setup(pBoss.getParticlesPtr());
     cout<<"setup particles!"<<endl;
-    finishedEntering();
     
     ofColor primaryColor = ofColor::goldenRod;
     pallette = colorMaker.createColoursFromStrategy(primaryColor, CT_SPLIT_COMPLEMENTARY);
@@ -22,17 +20,16 @@ void ParticleScene::setup(){
 
 void ParticleScene::update(){
     ofColor thisColor = pallette.at(floor(ofRandom(pallette.size())));
-    pBoss.addParticle(new CirclePart(thisColor));
     pBoss.update();
-    
-    attractive.update();
-    attractive.setPosition(ofGetMouseX(), ofGetMouseY(), 0);
+
     
 }
 
 void ParticleScene::draw(){
     ofBackground(0);
     pBoss.draw();
+    
+    ofDrawRectangle(50, 50, 50, 50);
     
 
 }

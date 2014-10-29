@@ -8,10 +8,9 @@ void ofApp::setup(){
     ofSetSmoothLighting(true);
     
     circles = (CircleScene*) sceneManager.add(new CircleScene());
-    connections = (ConnectorScene*) sceneManager.add(new ConnectorScene());
     sceneManager.add(new ParticleScene());
-    sceneManager.add(new RiceScene());
-    sceneManager.gotoScene("Rice", true);
+    sceneManager.add(new ConvexHullScene());
+    sceneManager.gotoScene("ConvexHull", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     setSceneManager(&sceneManager);
@@ -34,12 +33,11 @@ void ofApp::setup(){
     ofAddListener(controlPanel.guiEvent, this, &ofApp::onGuiEvent);
     
     //////SCENE SPECIFICS/////////
-    connections->setPoints(&POIs);
-    connections->setPointPower(&POIpower);
+
     
     for(int i=0;i<50;i++){
-        POIs[i] = ofVec3f(ofRandom(ofGetWidth()),ofRandom(ofGetHeight()));
-        POIpower[i] = ofRandom(1);
+        //POIs[i] = ofVec3f(ofRandom(ofGetWidth()),ofRandom(ofGetHeight()));
+       // POIpower[i] = ofRandom(1);
     }
 
 }

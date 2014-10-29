@@ -10,7 +10,6 @@
 #include "Scenes.h"
 
 class CircleScene;
-class ConnectorScene;
 
 class ofApp : public ofxApp{
 
@@ -38,7 +37,6 @@ private:
     
     ofxSceneManager sceneManager;
     CircleScene * circles;
-    ConnectorScene * connections;
     
     map<int,float> micInputs;
     map<int,ofVec3f> dancers;

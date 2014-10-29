@@ -11,8 +11,6 @@
 
 #include <iostream>
 #include "ofxAppUtils.h"
-#include "CirclePart.h"
-#include "Attractor.h"
 #include "ofxColourTheory.h"
 
 class ParticleScene : public ofxScene{
@@ -23,7 +21,6 @@ public:
     void update();
     void draw();
     
-    Attractor attractive;
 private:
     
     ofxParticleManager pBoss;

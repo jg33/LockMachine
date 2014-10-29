@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include "ofMain.h"
 #include "ofxAppUtils.h"
-#include "Circle.h"
 
 
 class CircleScene : public ofxScene{
@@ -29,7 +28,6 @@ public:
     
     
 private:
-    vector<Circle> circles;
     
     
 };
