@@ -9,7 +9,7 @@ void ofApp::setup(){
     
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     sceneManager.add(new ParticleScene());
-    sceneManager.add(new ConvexHullScene());
+    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene());
     sceneManager.gotoScene("ConvexHull", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
@@ -20,6 +20,10 @@ void ofApp::setup(){
     addTransformControls();
     setDrawControlPanel(true);
     setDrawFramerate(true);
+    
+    controlPanel.addPanel("ConvexHull Control",1);
+    controlPanel.setWhichPanel("ConvexHull Control");
+    controlPanel.addSlider2D("Hulls Offset", "Hull Offset", 0, 0, -500, 500, -500, 500, true);
 
     controlPanel.addPanel("Extras", 1);
     controlPanel.setWhichPanel("Extras");
@@ -89,6 +93,12 @@ void ofApp::onGuiEvent(guiCallbackData & d){
         POIs[ofFromString<int>(poiNum[1])] = ofVec3f(d.getFloat(0),d.getFloat(1));
         cout<< "set POI!"<<endl;
     }
+    
+    if (d.getDisplayName() == "Hulls Offset"){
+        hullScene->offsetX = d.getInt(0);
+        hullScene->offsetY = d.getInt(1);
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -96,6 +106,10 @@ void ofApp::keyPressed(int key){
     switch (key){
             case 'd':
             bDebug = !bDebug;
+            hullScene->bIsDebug = bDebug;
+            break;
+            case 'g':
+            hullScene->bIsGrabbingBackground = !hullScene->bIsGrabbingBackground;
             break;
             case '[':
             sceneManager.prevScene();

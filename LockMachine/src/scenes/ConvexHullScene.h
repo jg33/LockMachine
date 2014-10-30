@@ -23,16 +23,19 @@ public:
     void update();
     void draw();
     
-    
+    bool bIsDebug;
+    bool bIsGrabbingBackground;
+    int offsetX, offsetY;
+
     
 private:
     
     ofVideoGrabber cam;
-    ofxCvGrayscaleImage cvImg;
+    ofxCvGrayscaleImage cvImg, background;
     ofxCvContourFinder cvContours;
     
     vector<ofPoint> getConvexHull(vector<ofPoint> points);
-    vector<ofPoint> theHull;
+    vector< vector<ofPoint> > hulls;
     ofPoint h1,h2,h3;
     
 };

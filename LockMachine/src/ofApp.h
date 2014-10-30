@@ -10,6 +10,7 @@
 #include "Scenes.h"
 
 class CircleScene;
+class ConvexHullScene;
 
 class ofApp : public ofxApp{
 
@@ -37,6 +38,7 @@ private:
     
     ofxSceneManager sceneManager;
     CircleScene * circles;
+    ConvexHullScene * hullScene;
     
     map<int,float> micInputs;
     map<int,ofVec3f> dancers;

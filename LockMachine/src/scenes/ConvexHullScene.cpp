@@ -23,11 +23,25 @@ void ConvexHullScene::update(){
         color.allocate(640, 480);
         color.setFromPixels(cam.getPixels());
         
-        cvImg = color;
-        cvImg.threshold(50);
-        cvContours.findContours(cvImg, 50, 640, 500, false,true);
+        if(bIsGrabbingBackground){
+            background = color;
+        }
         
-        theHull = getConvexHull(cvContours.blobs[0].pts);
+        cvImg = color;
+        cvImg.absDiff(background);
+        cvImg.threshold(50);
+        cvContours.findContours(cvImg, 50, 1200, 1000, false,true);
+        
+        if(hulls.size()>0) hulls.clear();
+        for (int i=0;i< cvContours.blobs.size();i++){
+            hulls.push_back(getConvexHull(cvContours.blobs[i].pts));
+            
+            for (int i=0; i<hulls.size(); i++) {
+                
+                
+            }
+        
+        }
         
     }
     
@@ -35,18 +49,40 @@ void ConvexHullScene::update(){
 }
 
 void ConvexHullScene::draw(){
-    cvImg.draw(ofPoint(100,100));
-    cvContours.draw(ofPoint(100,100));
-    cam.draw(400,400,640,480);
+    ofBackground(0);
     
-    ofBeginShape();
-    for (int i=0; i<theHull.size(); i++) {
-        ofVertex(theHull[i]);
+    if(bIsDebug){
+        ofRectangle camDrawRect = ofRectangle(ofGetWidth()-300  ,0   ,cam.getWidth(),cam.getHeight());
+        ofPoint cvDrawPoint = ofPoint(ofGetWidth()-300,200);
+        ofRectangle cvDrawRect = ofRectangle(cvDrawPoint, 300, 200);
+        cvImg.draw(cvDrawRect);
+        cvContours.draw(cvDrawRect);
+        camDrawRect.scaleTo(ofRectangle(ofGetWidth()-300  ,0, 300,200));
+        cam.draw(camDrawRect);
+    
     }
-    ofEndShape();
+    
+    ofTranslate(offsetX, offsetY);
+    
+    //ofNoFill();
+    //ofSetLineWidth(10);
+    ofSetColor(255, 0, 0);
+    
+    
+    for (int i=0; i<hulls.size(); i++) { //loop through all the hulls
+        ofPolyline p;
+        for (int j=0;j<hulls[i].size();j++){ //loop through points in current hull
+            p.addVertex(hulls[i][j].x, hulls[i][j].y);
+        }
+
+        p.draw();
+    }
 
 }
 
+
+
+/// Convex Hull Calculation ///
 bool lexicalComparison(const ofPoint& v1, const ofPoint& v2) {
     if (v1.x > v2.x) return true;
     else if (v1.x < v2.x) return false;
