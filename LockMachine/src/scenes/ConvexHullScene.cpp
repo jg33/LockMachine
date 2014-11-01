@@ -14,6 +14,15 @@ void ConvexHullScene::setup(){
     
     cvImg.allocate(640, 480);
     
+    cout<<"setup hulls!"<<endl;
+    offsetX=0;
+    offsetY=0;
+    
+    bDrawExternal=true;
+    
+    ofEnableAlphaBlending();
+    
+    setCvSettings(50, 500, 500);
 }
 
 void ConvexHullScene::update(){
@@ -29,8 +38,9 @@ void ConvexHullScene::update(){
         
         cvImg = color;
         cvImg.absDiff(background);
-        cvImg.threshold(50);
-        cvContours.findContours(cvImg, 50, 1200, 1000, false,true);
+        cvImg.threshold(cvThreshold);
+        cvContours.findContours(cvImg, cvMinArea, cvMaxArea, cvNConsidered, false,true);
+
         
         if(hulls.size()>0) hulls.clear();
         for (int i=0;i< cvContours.blobs.size();i++){
@@ -44,6 +54,8 @@ void ConvexHullScene::update(){
         }
         
     }
+    
+    makeConnections(maxDist);
     
     
 }
@@ -66,7 +78,7 @@ void ConvexHullScene::draw(){
     
     //ofNoFill();
     //ofSetLineWidth(10);
-    ofSetColor(255, 0, 0);
+    ofSetColor(255);
     
     
     for (int i=0; i<hulls.size(); i++) { //loop through all the hulls
@@ -77,6 +89,8 @@ void ConvexHullScene::draw(){
 
         p.draw();
     }
+    
+    drawConnections();
 
 }
 
@@ -143,3 +157,51 @@ vector<ofPoint> ConvexHullScene::getConvexHull(vector<ofPoint> points) {
     
     return hull;
 }
+
+
+/// Connection Stuff ///
+void ConvexHullScene::makeConnections(int maxDist){
+    internalConnections.clear();
+    externalConnections.clear();
+    
+    for (int i=0;i<hulls.size();i++){ //for each hull
+        for(int j =0;j<hulls[i].size();j++){ //go through its points
+            ofPoint thisPoint = hulls[i][j];
+            for(int k =0;k<hulls[i].size();k++){ //each of those looks through its other points
+                ofPoint thatPoint = hulls[i][k];
+                if (thisPoint.distance(thatPoint) < maxDist) internalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
+            }
+            
+            for (int k=0; k<hulls.size(); k++) { //and other hulls
+                if (hulls[k]!=hulls[i]){
+                    for (int l=0; l<hulls[k].size(); l++) { //and other hulls' points
+                        ofPoint thatPoint = hulls[k][l];
+                        if (thisPoint.distance(thatPoint)< maxDist) externalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
+                        
+                    }
+                }
+                
+            }
+            
+        }
+    }
+    
+}
+
+void ConvexHullScene::drawConnections(){
+    if(bDrawInternal){
+        for (int i=0; i<internalConnections.size(); i++) {
+            ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
+            ofDrawLine(internalConnections[i].first, internalConnections[i].second);
+        }
+    }
+    
+    if (bDrawExternal){
+        for (int i=0; i<externalConnections.size(); i++) {
+            ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
+            ofDrawLine(externalConnections[i].first, externalConnections[i].second);
+        }
+    }
+    
+}
+

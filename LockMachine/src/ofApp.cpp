@@ -23,7 +23,14 @@ void ofApp::setup(){
     
     controlPanel.addPanel("ConvexHull Control",1);
     controlPanel.setWhichPanel("ConvexHull Control");
-    controlPanel.addSlider2D("Hulls Offset", "Hull Offset", 0, 0, -500, 500, -500, 500, true);
+    controlPanel.addSlider2D("Hulls Offset", "hullOffset", 0, 0, -500, 500, -500, 500, true);
+    controlPanel.addSlider("CV Threshold", "cvThreshold", 50, 0, 100, true);
+    controlPanel.addSlider("Min CV Contours", "cvMin", 10, 0, 200, true);
+    controlPanel.addSlider("Max CV Contours", "cvMax", 1000, 100, 10000, true);
+    controlPanel.addSlider("Num CV Considered", "cvNConsidered", 1000, 0, 2400, true);
+    controlPanel.addToggle("Draw Internals", "drawInternals", true);
+    controlPanel.addToggle("Draw Externals", "drawExternals", true);
+    controlPanel.addSlider("Maximum Distance", "MaxDist", 50, 0, 100, true);
 
     controlPanel.addPanel("Extras", 1);
     controlPanel.setWhichPanel("Extras");
@@ -74,6 +81,8 @@ void ofApp::update(){
     circles->setSizes(micInputs);
     //connections->setPoints(&POIs);
     
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    
     
 }
 
@@ -97,6 +106,25 @@ void ofApp::onGuiEvent(guiCallbackData & d){
     if (d.getDisplayName() == "Hulls Offset"){
         hullScene->offsetX = d.getInt(0);
         hullScene->offsetY = d.getInt(1);
+    } else if(d.getXmlName() == "MaxDist"){
+        hullScene->maxDist = d.getInt(0);
+    } else if(d.getXmlName() == "cvMin"){
+        hullScene->cvMinArea = d.getInt(0);
+    }else if(d.getXmlName() == "cvMax"){
+        hullScene->cvMaxArea = d.getInt(0);
+
+    }else if(d.getXmlName() == "cvNConsidered"){
+        hullScene->cvNConsidered = d.getInt(0);
+
+    }else if(d.getXmlName() == "cvThreshold"){
+        hullScene->cvThreshold = d.getInt(0);
+        
+    } else if(d.getXmlName() == "drawInternals"){
+        hullScene->bDrawInternal = d.getInt(0);
+        
+    }else if(d.getXmlName() == "drawExternals"){
+        hullScene->bDrawExternal = d.getInt(0);
+        
     }
     
 }

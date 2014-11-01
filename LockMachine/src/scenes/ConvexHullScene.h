@@ -23,20 +23,39 @@ public:
     void update();
     void draw();
     
+    
+    
     bool bIsDebug;
     bool bIsGrabbingBackground;
     int offsetX, offsetY;
+    
+    bool bDrawInternal, bDrawExternal;
+    int maxDist;
+    
+    void inline setCvSettings(int min, int max, int num){
+        cvMinArea = min;
+        cvMaxArea = max;
+        cvNConsidered = num;
+    };
+    int cvMinArea, cvMaxArea, cvNConsidered, cvThreshold;
 
     
 private:
     
+    /// CV Stuff ///
     ofVideoGrabber cam;
     ofxCvGrayscaleImage cvImg, background;
     ofxCvContourFinder cvContours;
     
+    /// Convex Hull Stuff ///
     vector<ofPoint> getConvexHull(vector<ofPoint> points);
     vector< vector<ofPoint> > hulls;
     ofPoint h1,h2,h3;
+    
+    /// Connection Stuff ///
+    vector< pair<ofPoint,ofPoint> > internalConnections, externalConnections;
+    void makeConnections(int maxDist);
+    void drawConnections();
     
 };
 
