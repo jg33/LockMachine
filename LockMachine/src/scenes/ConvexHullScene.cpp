@@ -10,37 +10,55 @@
 
 
 void ConvexHullScene::setup(){
-    cam.initGrabber(640,480);
+    cam.initGrabber(VIDEO_WIDTH ,VIDEO_HEIGHT);
     
-    cvImg.allocate(640, 480);
+    cvImg.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
+    currentFrame.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
     
     cout<<"setup hulls!"<<endl;
     offsetX=0;
     offsetY=0;
     
-    bDrawExternal=true;
+    bDrawExternal=false;
+    bDrawInternal=false;
     
     ofEnableAlphaBlending();
     
     setCvSettings(50, 500, 500);
+    cvThreshold = 50;
+    maxDist = 50;
+    inputSmoothing = 0.5;
 }
 
 void ConvexHullScene::update(){
     cam.update();
     if (cam.isFrameNew()){
-        ofxCvColorImage color;
-        color.allocate(640, 480);
-        color.setFromPixels(cam.getPixels());
         
+        ofxCvColorImage color;
+        ofxCvGrayscaleImage grey;
+
+        color.setFromPixels(cam.getPixels());
+        grey.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
+        color.convertToGrayscalePlanarImage(grey, 0);
+        
+        if(inputSmoothing>0){
+            currentFrame.setFromPixels(smoothImage(currentFrame.getPixels() , grey.getPixels(), inputSmoothing));
+            
+        } else{
+            currentFrame.setFromPixels(grey.getPixels());
+        }
+        cvImg.setFromPixels(currentFrame.getPixels());
+
         if(bIsGrabbingBackground){
-            background = color;
+            background = grey;
         }
         
-        cvImg = color;
+        //cvImg = grey;
         cvImg.absDiff(background);
         cvImg.threshold(cvThreshold);
         cvContours.findContours(cvImg, cvMinArea, cvMaxArea, cvNConsidered, false,true);
-
+        
+        
         
         if(hulls.size()>0) hulls.clear();
         for (int i=0;i< cvContours.blobs.size();i++){
@@ -64,13 +82,15 @@ void ConvexHullScene::draw(){
     ofBackground(0);
     
     if(bIsDebug){
-        ofRectangle camDrawRect = ofRectangle(ofGetWidth()-300  ,0   ,cam.getWidth(),cam.getHeight());
-        ofPoint cvDrawPoint = ofPoint(ofGetWidth()-300,200);
-        ofRectangle cvDrawRect = ofRectangle(cvDrawPoint, 300, 200);
+        ofRectangle camDrawRect = ofRectangle(ofGetWidth()-320  ,0   ,320,240);
+        ofPoint cvDrawPoint = ofPoint(ofGetWidth()-320,240);
+        ofRectangle cvDrawRect = ofRectangle(cvDrawPoint, 320, 240);
         cvImg.draw(cvDrawRect);
         cvContours.draw(cvDrawRect);
-        camDrawRect.scaleTo(ofRectangle(ofGetWidth()-300  ,0, 300,200));
-        cam.draw(camDrawRect);
+        ofImage resizedCam;
+        resizedCam = cam.getPixels().getChannel(0);
+        resizedCam.resize(320, 240);
+        resizedCam.draw(camDrawRect);
     
     }
     
@@ -86,7 +106,7 @@ void ConvexHullScene::draw(){
         for (int j=0;j<hulls[i].size();j++){ //loop through points in current hull
             p.addVertex(hulls[i][j].x, hulls[i][j].y);
         }
-
+        p.close();
         p.draw();
     }
     
@@ -190,10 +210,15 @@ void ConvexHullScene::makeConnections(int maxDist){
 
 void ConvexHullScene::drawConnections(){
     if(bDrawInternal){
+        //ofNoFill();
+        //ofBeginShape();
         for (int i=0; i<internalConnections.size(); i++) {
             ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
             ofDrawLine(internalConnections[i].first, internalConnections[i].second);
+            //ofVertex(internalConnections[i].first);
+            //ofVertex(internalConnections[i].second);
         }
+        //ofEndShape();
     }
     
     if (bDrawExternal){
@@ -204,4 +229,43 @@ void ConvexHullScene::drawConnections(){
     }
     
 }
+
+
+/// Smoothing ///
+
+ofPixels ConvexHullScene::smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing){
+    ofPixels smoothedImage;
+    smoothedImage.allocate(oldPix.getWidth(), oldPix.getHeight(), oldPix.getNumChannels());
+    
+    
+    
+    for (int i=0; i<smoothedImage.size();i++){
+        try{
+        smoothedImage[i] = (oldPix[i]*smoothing )+ (newPix[i]*(1-smoothing));
+        }catch (...){
+            
+        }
+    }
+    
+    return smoothedImage;
+    
+}
+
+// dumb resize //
+
+ofPixels ConvexHullScene::dumbResize(ofPixels input, int division){
+    ofPixels output;
+    output.allocate((int)input.getWidth()/division, (int)input.getHeight()/division, input.getNumChannels());
+    
+    for(int i=0;i<output.size();i+=output.getNumChannels()){
+        output[i] = input[i*2];
+        
+    }
+    
+    return output;
+    
+    
+}
+
+
 

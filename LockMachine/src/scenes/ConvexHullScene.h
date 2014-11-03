@@ -14,6 +14,8 @@
 #include "ofxAppUtils.h"
 #include "ofxOpenCv.h"
 
+#define VIDEO_WIDTH 640
+#define VIDEO_HEIGHT 480
 
 class ConvexHullScene : public ofxScene{
     
@@ -38,7 +40,7 @@ public:
         cvNConsidered = num;
     };
     int cvMinArea, cvMaxArea, cvNConsidered, cvThreshold;
-
+    float inputSmoothing;
     
 private:
     
@@ -57,6 +59,12 @@ private:
     void makeConnections(int maxDist);
     void drawConnections();
     
+    /// Smoothing ///
+    ofPixels smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing);
+    ofxCvGrayscaleImage currentFrame;
+    
+    /// resizer ///
+    ofPixels dumbResize(ofPixels input, int division);
 };
 
 

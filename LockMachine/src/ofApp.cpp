@@ -26,11 +26,12 @@ void ofApp::setup(){
     controlPanel.addSlider2D("Hulls Offset", "hullOffset", 0, 0, -500, 500, -500, 500, true);
     controlPanel.addSlider("CV Threshold", "cvThreshold", 50, 0, 100, true);
     controlPanel.addSlider("Min CV Contours", "cvMin", 10, 0, 200, true);
-    controlPanel.addSlider("Max CV Contours", "cvMax", 1000, 100, 10000, true);
+    controlPanel.addSlider("Max CV Contours", "cvMax", 1000, 100, 100000, true);
     controlPanel.addSlider("Num CV Considered", "cvNConsidered", 1000, 0, 2400, true);
-    controlPanel.addToggle("Draw Internals", "drawInternals", true);
-    controlPanel.addToggle("Draw Externals", "drawExternals", true);
+    controlPanel.addToggle("Draw Internals", "drawInternals", false);
+    controlPanel.addToggle("Draw Externals", "drawExternals", false);
     controlPanel.addSlider("Maximum Distance", "MaxDist", 50, 0, 100, true);
+    controlPanel.addSlider("Input Smoothing", "InputSmoothing", 0.5, 0, 1, false);
 
     controlPanel.addPanel("Extras", 1);
     controlPanel.setWhichPanel("Extras");
@@ -125,6 +126,8 @@ void ofApp::onGuiEvent(guiCallbackData & d){
     }else if(d.getXmlName() == "drawExternals"){
         hullScene->bDrawExternal = d.getInt(0);
         
+    }else if(d.getXmlName() == "InputSmoothing"){
+        hullScene->inputSmoothing = d.getFloat(0);
     }
     
 }
@@ -144,6 +147,9 @@ void ofApp::keyPressed(int key){
             break;
             case ']':
             sceneManager.nextScene();
+            break;
+            case 'f':
+            ofToggleFullscreen();
             break;
             
     }
