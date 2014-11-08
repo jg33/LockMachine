@@ -7,10 +7,22 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     ofSetSmoothLighting(true);
     
+    ///CAMERA////
+    //cam = ofVideoGrabber();
+    //cvMan.startThread();
+    grabber.setup(640, 480);
+
+
+    
+    ///SCENE STUFF///
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     sceneManager.add(new ParticleScene());
-    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene());
-    sceneManager.gotoScene("ConvexHull", true);
+    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&grabber));
+    containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&grabber));
+    
+    
+    
+    sceneManager.gotoScene("ContainmentPair", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     setSceneManager(&sceneManager);
@@ -56,6 +68,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
     ofxOscMessage msg;
     
     while (oscIn.hasWaitingMessages()){
@@ -63,23 +76,25 @@ void ofApp::update(){
         vector<string> address = ofSplitString(msg.getAddress(),"/");
 
         if(address[1] == "mic"){
-            micInputs[ofToInt(address[2])]= msg.getArgAsFloat(0);
+          //  micInputs[ofToInt(address[2])]= msg.getArgAsFloat(0);
             cout<< msg.getAddress() <<endl;
             
         } else if ( address[1] == "dancer"){
-            dancers[ofToInt(address[2])] = ofVec3f(msg.getArgAsFloat(0),msg.getArgAsFloat(1),msg.getArgAsFloat(2));
+         //   dancers[ofToInt(address[2])] = ofVec3f(msg.getArgAsFloat(0),msg.getArgAsFloat(1),msg.getArgAsFloat(2));
         } else if (address[1] == "POI" && address[3] == "pos"){
-            POIs[ofFromString<int>(address[2])] = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
+          //  POIs[ofFromString<int>(address[2])] = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
             
         } else if(address[1] == "POI" && address[3] == "power"){
-            POIpower[ofFromString<int>(address[2])] = msg.getArgAsFloat(0);
+           // POIpower[ofFromString<int>(address[2])] = msg.getArgAsFloat(0);
+        } else if(address[1] == "leftBlob" && address[2] == "size"){
+            containment->setWiggle(LEFT, msg.getArgAsFloat(0));
         }
         
     }
     
     
     
-    circles->setSizes(micInputs);
+    //circles->setSizes(micInputs);
     //connections->setPoints(&POIs);
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
@@ -97,10 +112,14 @@ void ofApp::draw(){
     //drawFramerate(10, 10);
 }
 
+void ofApp::exit(){
+    //cvMan.waitForThread(true);
+}
+
 void ofApp::onGuiEvent(guiCallbackData & d){
     if (ofIsStringInString(d.getXmlName(), "POI")){
         vector <string> poiNum = ofSplitString(d.getXmlName(), "I");
-        POIs[ofFromString<int>(poiNum[1])] = ofVec3f(d.getFloat(0),d.getFloat(1));
+     //   POIs[ofFromString<int>(poiNum[1])] = ofVec3f(d.getFloat(0),d.getFloat(1));
         cout<< "set POI!"<<endl;
     }
     
@@ -138,6 +157,7 @@ void ofApp::keyPressed(int key){
             case 'd':
             bDebug = !bDebug;
             hullScene->bIsDebug = bDebug;
+            containment->bIsDebug = bDebug;
             break;
             case 'g':
             hullScene->bIsGrabbingBackground = !hullScene->bIsGrabbingBackground;

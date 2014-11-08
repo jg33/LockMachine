@@ -21,6 +21,7 @@ class ConvexHullScene : public ofxScene{
     
 public:
     ConvexHullScene():ofxScene("ConvexHull"){setSingleSetup(false);};
+    ConvexHullScene(ofVideoGrabber * _camRef):ofxScene("ConvexHull"){setSingleSetup(false); cam= _camRef;};
     void setup();
     void update();
     void draw();
@@ -45,7 +46,8 @@ public:
 private:
     
     /// CV Stuff ///
-    ofVideoGrabber cam;
+    ofVideoGrabber grabber;
+    ofVideoGrabber* cam;
     ofxCvGrayscaleImage cvImg, background;
     ofxCvContourFinder cvContours;
     

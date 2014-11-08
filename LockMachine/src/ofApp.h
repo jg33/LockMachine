@@ -6,11 +6,13 @@
 #include "ofxAppUtils.h"
 #include "ofxSyphon.h"
 #include "ofxOsc.h"
+#include "CvManager.h"
 
 #include "Scenes.h"
 
 class CircleScene;
 class ConvexHullScene;
+class ContainmentPairScene;
 
 class ofApp : public ofxApp{
 
@@ -18,6 +20,7 @@ class ofApp : public ofxApp{
 		void setup();
 		void update();
 		void draw();
+        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -32,6 +35,7 @@ class ofApp : public ofxApp{
         void onGuiEvent(guiCallbackData & d);
     
 
+
 private:
     ofxSyphonServer syphonServe;
     ofxOscReceiver oscIn;
@@ -39,10 +43,14 @@ private:
     ofxSceneManager sceneManager;
     CircleScene * circles;
     ConvexHullScene * hullScene;
+    ContainmentPairScene * containment;
     
-    map<int,float> micInputs;
-    map<int,ofVec3f> dancers;
-    map<int,ofVec3f> POIs;
-    map<int,float> POIpower;
+    ofVideoGrabber grabber;
+    CvManager cvMan;
+    
+   // map<int,float> micInputs;
+    //map<int,ofVec3f> dancers;
+   // map<int,ofVec3f> POIs;
+    //map<int,float> POIpower;
     
 };

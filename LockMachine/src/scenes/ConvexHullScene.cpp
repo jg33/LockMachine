@@ -10,7 +10,8 @@
 
 
 void ConvexHullScene::setup(){
-    cam.initGrabber(VIDEO_WIDTH ,VIDEO_HEIGHT);
+    //grabber.initGrabber(VIDEO_WIDTH ,VIDEO_HEIGHT);
+    //cam = &grabber;
     
     cvImg.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
     currentFrame.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
@@ -31,13 +32,13 @@ void ConvexHullScene::setup(){
 }
 
 void ConvexHullScene::update(){
-    cam.update();
-    if (cam.isFrameNew()){
+    cam->update();
+    if (cam->isFrameNew()){
         
         ofxCvColorImage color;
         ofxCvGrayscaleImage grey;
 
-        color.setFromPixels(cam.getPixels());
+        color.setFromPixels(cam->getPixels());
         grey.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
         color.convertToGrayscalePlanarImage(grey, 0);
         
@@ -88,7 +89,7 @@ void ConvexHullScene::draw(){
         cvImg.draw(cvDrawRect);
         cvContours.draw(cvDrawRect);
         ofImage resizedCam;
-        resizedCam = cam.getPixels().getChannel(0);
+        resizedCam = cam->getPixels().getChannel(0);
         resizedCam.resize(320, 240);
         resizedCam.draw(camDrawRect);
     

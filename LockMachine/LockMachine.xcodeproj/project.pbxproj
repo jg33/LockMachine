@@ -153,6 +153,8 @@
 		887D1CA31A006C2D003F3F9A /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 887D1BE91A006C2C003F3F9A /* ofxCvShortImage.cpp */; };
 		887D1CA41A006C2D003F3F9A /* opencv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 887D1C6F1A006C2C003F3F9A /* opencv.a */; };
 		887D1CA71A006C64003F3F9A /* ConvexHullScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 887D1CA51A006C64003F3F9A /* ConvexHullScene.cpp */; };
+		888338F11A0D4FDD005B8238 /* ContainmentPairScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888338EF1A0D4FDD005B8238 /* ContainmentPairScene.cpp */; };
+		888338F41A0D5102005B8238 /* ContainmentBlob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888338F21A0D5102005B8238 /* ContainmentBlob.cpp */; };
 		888680F119E6170200A9FB4B /* CircleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 888680EF19E6170200A9FB4B /* CircleScene.cpp */; };
 		899BAF53175868463FE1B029 /* RecursiveDirectoryIteratorStategies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F27637AABA89A235C5974D56 /* RecursiveDirectoryIteratorStategies.cpp */; };
 		8D60C222CBD3F869382832E9 /* ofxSyphonServer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 32D6F27DC6308427F9A278C1 /* ofxSyphonServer.mm */; };
@@ -662,8 +664,13 @@
 		887D1C6F1A006C2C003F3F9A /* opencv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = opencv.a; sourceTree = "<group>"; };
 		887D1CA51A006C64003F3F9A /* ConvexHullScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConvexHullScene.cpp; path = scenes/ConvexHullScene.cpp; sourceTree = "<group>"; };
 		887D1CA61A006C64003F3F9A /* ConvexHullScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConvexHullScene.h; path = scenes/ConvexHullScene.h; sourceTree = "<group>"; };
+		888338EF1A0D4FDD005B8238 /* ContainmentPairScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContainmentPairScene.cpp; path = scenes/ContainmentPairScene.cpp; sourceTree = "<group>"; };
+		888338F01A0D4FDD005B8238 /* ContainmentPairScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContainmentPairScene.h; path = scenes/ContainmentPairScene.h; sourceTree = "<group>"; };
+		888338F21A0D5102005B8238 /* ContainmentBlob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContainmentBlob.cpp; path = scenes/elements/ContainmentBlob.cpp; sourceTree = "<group>"; };
+		888338F31A0D5102005B8238 /* ContainmentBlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContainmentBlob.h; path = scenes/elements/ContainmentBlob.h; sourceTree = "<group>"; };
 		888680EF19E6170200A9FB4B /* CircleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CircleScene.cpp; path = scenes/CircleScene.cpp; sourceTree = "<group>"; };
 		888680F019E6170200A9FB4B /* CircleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircleScene.h; path = scenes/CircleScene.h; sourceTree = "<group>"; };
+		88D40B5D1A0EBBDB00B056E8 /* CvManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CvManager.h; sourceTree = "<group>"; };
 		89B60FB247E1F64013C716DC /* AbstractTypes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = AbstractTypes.h; path = ../../../addons/ofxIO/libs/ofxIO/include/ofx/IO/AbstractTypes.h; sourceTree = SOURCE_ROOT; };
 		8B30E93FD3D3475EED522A0E /* ofxOscBundle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscBundle.h; path = ../../../addons/ofxOsc/src/ofxOscBundle.h; sourceTree = SOURCE_ROOT; };
 		8C75AFC8774A62495DD53464 /* ofxOscReceiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscReceiver.h; path = ../../../addons/ofxOsc/src/ofxOscReceiver.h; sourceTree = SOURCE_ROOT; };
@@ -1630,6 +1637,15 @@
 			path = osx;
 			sourceTree = "<group>";
 		};
+		888338F51A0D5115005B8238 /* elements */ = {
+			isa = PBXGroup;
+			children = (
+				888338F21A0D5102005B8238 /* ContainmentBlob.cpp */,
+				888338F31A0D5102005B8238 /* ContainmentBlob.h */,
+			);
+			name = elements;
+			sourceTree = "<group>";
+		};
 		888680F219E6170B00A9FB4B /* scenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1640,6 +1656,9 @@
 				887D1CA51A006C64003F3F9A /* ConvexHullScene.cpp */,
 				887D1CA61A006C64003F3F9A /* ConvexHullScene.h */,
 				887D1BD81A006AA1003F3F9A /* Scenes.h */,
+				888338F51A0D5115005B8238 /* elements */,
+				888338EF1A0D4FDD005B8238 /* ContainmentPairScene.cpp */,
+				888338F01A0D4FDD005B8238 /* ContainmentPairScene.h */,
 			);
 			name = scenes;
 			sourceTree = "<group>";
@@ -1847,6 +1866,7 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				88D40B5D1A0EBBDB00B056E8 /* CvManager.h */,
 				888680F219E6170B00A9FB4B /* scenes */,
 			);
 			path = src;
@@ -1975,6 +1995,7 @@
 				8864049419E4671B00408336 /* ofxRParticlePlexusRenderer.cpp in Sources */,
 				8864049B19E4671B00408336 /* ofxSwarmBehavior.cpp in Sources */,
 				886405AA19E46CBE00408336 /* simpleColor.cpp in Sources */,
+				888338F11A0D4FDD005B8238 /* ContainmentPairScene.cpp in Sources */,
 				888680F119E6170200A9FB4B /* CircleScene.cpp in Sources */,
 				8864049219E4671B00408336 /* ofxRParticleGlowieRenderer.cpp in Sources */,
 				8864054F19E46CAE00408336 /* ofxApp.cpp in Sources */,
@@ -2116,6 +2137,7 @@
 				8864059F19E46CBE00408336 /* guiTypeMultiToggle.cpp in Sources */,
 				A29D8C96AE042ECEAA1BD4F3 /* NetworkingUtilsWin.cpp in Sources */,
 				8864051619E4672100408336 /* ofxUINumberDialer.cpp in Sources */,
+				888338F41A0D5102005B8238 /* ContainmentBlob.cpp in Sources */,
 				8864048319E4671B00408336 /* ofxBoundaryBehavior.cpp in Sources */,
 				886405A419E46CBE00408336 /* guiTypeTextInput.cpp in Sources */,
 				28090DEB5109115003E8F1C5 /* UdpSocketWin.cpp in Sources */,

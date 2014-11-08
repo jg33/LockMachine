@@ -12,5 +12,7 @@
 #include "ParticleScene.h"
 #include "CircleScene.h"
 #include "ConvexHullScene.h"
+#include "ContainmentPairScene.h"
+
 
 #endif
