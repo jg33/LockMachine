@@ -13,9 +13,13 @@
 #include "ofMain.h"
 #include "ofxAppUtils.h"
 #include "ofxOpenCv.h"
+#include "CvManager.h"
 
 #define VIDEO_WIDTH 640
 #define VIDEO_HEIGHT 480
+
+
+
 
 class ConvexHullScene : public ofxScene{
     
@@ -25,8 +29,7 @@ public:
     void setup();
     void update();
     void draw();
-    
-    
+    void exit(){conMan.stopThread();};
     
     bool bIsDebug;
     bool bIsGrabbingBackground;
@@ -60,6 +63,8 @@ private:
     vector< pair<ofPoint,ofPoint> > internalConnections, externalConnections;
     void makeConnections(int maxDist);
     void drawConnections();
+    ConnectionManager conMan;
+
     
     /// Smoothing ///
     ofPixels smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing);
@@ -68,6 +73,8 @@ private:
     /// resizer ///
     ofPixels dumbResize(ofPixels input, int division);
 };
+
+
 
 
 

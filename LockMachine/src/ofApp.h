@@ -6,8 +6,9 @@
 #include "ofxAppUtils.h"
 #include "ofxSyphon.h"
 #include "ofxOsc.h"
-#include "CvManager.h"
+#include "ofxPostProcessing.h"
 
+#include "CvManager.h"
 #include "Scenes.h"
 
 class CircleScene;
@@ -47,6 +48,7 @@ private:
     
     ofVideoGrabber grabber;
     CvManager cvMan;
+    
     
    // map<int,float> micInputs;
     //map<int,ofVec3f> dancers;

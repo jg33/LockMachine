@@ -6,6 +6,7 @@ void ofApp::setup(){
     oscIn.setup(6666);
     ofSetVerticalSync(true);
     ofSetSmoothLighting(true);
+
     
     ///CAMERA////
     //cam = ofVideoGrabber();
@@ -99,12 +100,12 @@ void ofApp::update(){
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     popTransforms();
+    
     
     syphonServe.publishScreen();
     

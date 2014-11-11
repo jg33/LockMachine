@@ -29,6 +29,8 @@ void ConvexHullScene::setup(){
     cvThreshold = 50;
     maxDist = 50;
     inputSmoothing = 0.5;
+    
+    conMan.startThread();
 }
 
 void ConvexHullScene::update(){
@@ -71,6 +73,9 @@ void ConvexHullScene::update(){
             }
         
         }
+        conMan.lock();
+        conMan.setHulls(hulls);
+        conMan.unlock();
         
     }
     
@@ -182,30 +187,70 @@ vector<ofPoint> ConvexHullScene::getConvexHull(vector<ofPoint> points) {
 
 /// Connection Stuff ///
 void ConvexHullScene::makeConnections(int maxDist){
+    
+    conMan.lock();
+    conMan.maxDist = maxDist;
+    conMan.bDrawExternal = bDrawExternal;
+    conMan.bDrawInternal = bDrawInternal;
+    conMan.unlock();
+    
+    if (bDrawInternal) {
+        conMan.lock();
+        internalConnections= conMan.getInternalConnections();
+        conMan.unlock();
+    }
+    if (bDrawExternal){
+        conMan.lock();
+        externalConnections = conMan.getExternalConnections();
+        conMan.unlock();
+    }
+    
+    
+    /*
     internalConnections.clear();
     externalConnections.clear();
     
+    
     for (int i=0;i<hulls.size();i++){ //for each hull
-        for(int j =0;j<hulls[i].size();j++){ //go through its points
+        
+        for(int j =0;j<hulls[i].size();j++){ //go through itspoints
             ofPoint thisPoint = hulls[i][j];
-            for(int k =0;k<hulls[i].size();k++){ //each of those looks through its other points
-                ofPoint thatPoint = hulls[i][k];
-                if (thisPoint.distance(thatPoint) < maxDist) internalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
-            }
             
-            for (int k=0; k<hulls.size(); k++) { //and other hulls
-                if (hulls[k]!=hulls[i]){
-                    for (int l=0; l<hulls[k].size(); l++) { //and other hulls' points
-                        ofPoint thatPoint = hulls[k][l];
-                        if (thisPoint.distance(thatPoint)< maxDist) externalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
-                        
-                    }
+            if(bDrawInternal){
+                for(int k =0;k<hulls[i].size();k++){ //each of those looks through its other points
+                    ofPoint thatPoint = hulls[i][k];
+                    if (thisPoint.distance(thatPoint) < maxDist) internalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
                 }
-                
             }
-            
+            if(bDrawExternal){
+        
+                for (int k=0; k<hulls.size(); k++) { //and other hulls
+                    if (hulls[k]!=hulls[i]){
+                        for (int l=k; l<hulls[k].size(); l++) { //and other hulls' points
+                            ofPoint thatPoint = hulls[k][l];
+                            if (thisPoint.distance(thatPoint)< maxDist) externalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
+                            
+                        }
+                    }
+                    
+                }
+
+            }
         }
     }
+    
+    for(int i=0;i<tempPoints.size();i++){
+        ofPoint thisPoint = tempPoints[i];
+        
+        for (int j =0;j<tempPoints.size();j++){
+            ofPoint thatPoint = tempPoints[j];
+            if (thisPoint.distance(thatPoint)< maxDist) {
+                externalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
+            }
+        }
+        tempPoints.erase(tempPoints.begin());
+    }*/
+    
     
 }
 
