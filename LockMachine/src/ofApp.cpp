@@ -18,7 +18,7 @@ void ofApp::setup(){
     ///SCENE STUFF///
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     sceneManager.add(new ParticleScene());
-    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&grabber));
+    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&grabber, &syphonServe));
     containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&grabber));
     
     
@@ -105,10 +105,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     popTransforms();
-    
-    
-    syphonServe.publishScreen();
-    
     //drawControlPanel();
     //drawFramerate(10, 10);
 }

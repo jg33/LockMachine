@@ -14,6 +14,7 @@
 #include "ofxAppUtils.h"
 #include "ofxOpenCv.h"
 #include "CvManager.h"
+#include "ofxSyphon.h"
 
 #define VIDEO_WIDTH 640
 #define VIDEO_HEIGHT 480
@@ -26,6 +27,8 @@ class ConvexHullScene : public ofxScene{
 public:
     ConvexHullScene():ofxScene("ConvexHull"){setSingleSetup(false);};
     ConvexHullScene(ofVideoGrabber * _camRef):ofxScene("ConvexHull"){setSingleSetup(false); cam= _camRef;};
+    ConvexHullScene(ofVideoGrabber * _camRef, ofxSyphonServer* _syphon):ofxScene("ConvexHull"){setSingleSetup(false); cam= _camRef; syphon = _syphon;};
+    
     void setup();
     void update();
     void draw();
@@ -47,6 +50,7 @@ public:
     float inputSmoothing;
     
 private:
+    ofxSyphonServer * syphon;
     
     /// CV Stuff ///
     ofVideoGrabber grabber;
@@ -64,6 +68,7 @@ private:
     void makeConnections(int maxDist);
     void drawConnections();
     ConnectionManager conMan;
+    //ConnectionDrawer conDraw;
 
     
     /// Smoothing ///

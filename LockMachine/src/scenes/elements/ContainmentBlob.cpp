@@ -70,12 +70,12 @@ void ContainmentBlob::draw(){
     ofPushMatrix();
     ofTranslate(pos);
     
-    ofSetColor(ofColor::orangeRed);
+    ofSetColor(ofColor::red);
     for(int i=0;i<lines.size();i++){
         lines[i].draw();
     }
     
-    ofSetColor(50,50,255);
+    ofSetColor(255);
     theMesh.drawWireframe();
     
     float noiseScale1 = ofMap(ofNoise(ofGetElapsedTimef()*0.1), 0, 1, 0.7, 1.2);
@@ -83,7 +83,7 @@ void ContainmentBlob::draw(){
 
     ofScale(noiseScale1,noiseScale1);
     ofRotate(ofGetElapsedTimef()*10, -1, -3.3, -0.7);
-    ofSetColor(ofColor::blueSteel);
+    ofSetColor(150);
     theMesh.drawWireframe();
     ofScale(noiseScale2, noiseScale2);
     ofRotate(ofGetElapsedTimef()*2, 1, -4.5, 2.9);

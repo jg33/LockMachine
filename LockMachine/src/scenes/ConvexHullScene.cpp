@@ -117,7 +117,8 @@ void ConvexHullScene::draw(){
     }
     
     drawConnections();
-
+    
+    syphon->publishScreen();
 }
 
 
@@ -189,9 +190,8 @@ vector<ofPoint> ConvexHullScene::getConvexHull(vector<ofPoint> points) {
 void ConvexHullScene::makeConnections(int maxDist){
     
     conMan.lock();
-    conMan.maxDist = maxDist;
-    conMan.bDrawExternal = bDrawExternal;
-    conMan.bDrawInternal = bDrawInternal;
+    conMan.setMaxDist(maxDist);
+    conMan.setDrawMode(bDrawInternal,bDrawExternal);
     conMan.unlock();
     
     if (bDrawInternal) {
@@ -268,10 +268,22 @@ void ConvexHullScene::drawConnections(){
     }
     
     if (bDrawExternal){
+        
+        ofMesh poly;
+        poly.setMode(OF_PRIMITIVE_LINES);
+        poly.setupIndicesAuto();
         for (int i=0; i<externalConnections.size(); i++) {
-            ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
-            ofDrawLine(externalConnections[i].first, externalConnections[i].second);
+            //ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
+            //ofDrawLine(externalConnections[i].first, externalConnections[i].second);
+            ofFloatColor thisColor = ofColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
+            
+            poly.addVertex(externalConnections[i].first);
+            poly.addColor(thisColor);
+            poly.addVertex(externalConnections[i].second);
+            poly.addColor(thisColor );
+        
         }
+        poly.draw(  );
     }
     
 }

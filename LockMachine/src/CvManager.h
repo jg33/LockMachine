@@ -19,14 +19,14 @@ public:
     
     void threadedFunction(){};
 
-    //void setup();
-    //void update();
+    void setup(){};
+    void update(){};
     
-    //bool bHasNewFrame(){return true;};
+    bool bHasNewFrame(){return true;};
     
     
 private:
-    //ofVideoGrabber grabber;
+    ofVideoGrabber grabber;
     
 };
 
@@ -84,15 +84,64 @@ public:
     vector< pair<ofPoint,ofPoint> > getExternalConnections(){
         return externalConnections;
     };
-    void setHulls(vector< vector<ofPoint> > _hulls){hulls=_hulls;};
+    void setHulls(vector< vector<ofPoint> > _hulls){
+        hulls=_hulls;
+    };
+    
+    void setMaxDist(float _amt){
+        maxDist = _amt;
+    };
+    
+    void setDrawMode(bool drawInternal, bool drawExternal){
+        bDrawInternal = drawInternal;
+        bDrawExternal = drawExternal;
+    }
+    
+private:
     
     float maxDist = 50;
     bool bDrawInternal, bDrawExternal;
     
-private:
     vector<vector<ofPoint> > hulls;
     vector< pair<ofPoint,ofPoint> > internalConnections, externalConnections;
     
+    
+};
+
+class ConnectionDrawer : public ofThread{ //No threaded openGL calls?//
+    
+    
+public :
+    void threadedFunction(){
+        drawnTex.allocate(ofGetWidth(), ofGetHeight());
+        while(isThreadRunning()){
+            ofFbo tempFbo;
+            tempFbo.allocate(ofGetWidth(), ofGetHeight());
+            
+            tempFbo.begin();
+            ofDrawLine(0, 0, 100, 100);
+            tempFbo.end();
+            
+            lock();
+            drawnTex = tempFbo;
+            unlock();
+        }
+        
+    }
+    
+    void setConnections( vector< pair<ofPoint, ofPoint> > _connections ){
+        connections = _connections;
+    }
+    
+    ofFbo getFbo(){
+        return drawnTex;
+    }
+    
+private:
+    
+    ofFbo drawnTex;
+    
+    vector< pair<ofPoint, ofPoint> > connections;
 };
 
 #endif /* defined(__LockMachine__CvManager__) */
