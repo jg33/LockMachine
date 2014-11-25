@@ -28,6 +28,8 @@ public:
     ConvexHullScene():ofxScene("ConvexHull"){setSingleSetup(false);};
     ConvexHullScene(ofVideoGrabber * _camRef):ofxScene("ConvexHull"){setSingleSetup(false); cam= _camRef;};
     ConvexHullScene(ofVideoGrabber * _camRef, ofxSyphonServer* _syphon):ofxScene("ConvexHull"){setSingleSetup(false); cam= _camRef; syphon = _syphon;};
+    ConvexHullScene(CvManager * _cv, ofxSyphonServer* _syphon):ofxScene("ConvexHull"){setSingleSetup(false); cvMan= _cv; syphon = _syphon;};
+    
     
     void setup();
     void update();
@@ -53,10 +55,11 @@ private:
     ofxSyphonServer * syphon;
     
     /// CV Stuff ///
-    ofVideoGrabber grabber;
+    //ofVideoGrabber grabber;
     ofVideoGrabber* cam;
     ofxCvGrayscaleImage cvImg, background;
     ofxCvContourFinder cvContours;
+    CvManager * cvMan;
     
     /// Convex Hull Stuff ///
     vector<ofPoint> getConvexHull(vector<ofPoint> points);

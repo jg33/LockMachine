@@ -40,6 +40,8 @@ private:
     float decay;
     float speed;
     
+    vector<ofVec3f> randomPoints;
+    
 };
 
 #endif /* defined(__LockMachine__ContainmentBlob__) */

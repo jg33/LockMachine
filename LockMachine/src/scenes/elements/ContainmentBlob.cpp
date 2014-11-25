@@ -22,6 +22,12 @@ void ContainmentBlob::setup(ofVec3f _pos){
     prevSize = targetSize;
     speed = 1;
     
+    
+    for(int i = 0; i< theMesh.getVertices().size(); i++){
+        ofVec3f thisPoint = ofVec3f(ofRandom(-4500,4500), ofRandom(-1500,-1024));
+        randomPoints.push_back(thisPoint);
+    }
+    
 }
 
 
@@ -44,7 +50,7 @@ void ContainmentBlob::update(){
         
         ofVec3f oldPoint = baseMesh.getVertices()[i].scale(size);
         ofVec3f noiseVec = ofVec3f(ofSignedNoise(speed*i+ofGetElapsedTimef() ),ofSignedNoise(speed* 1.33*i+ofGetElapsedTimef()+33.3),ofSignedNoise(speed*1.77*i+ofGetElapsedTimef()+104.25));
-        noiseVec.scale(ofMap(sizeDiff, 0, 25, 3, 25));
+        noiseVec.scale(ofMap(sizeDiff, 0, 25, 3, 10));
         
         ofVec3f finalPoint = oldPoint+noiseVec;
         
@@ -55,12 +61,14 @@ void ContainmentBlob::update(){
         
         ofPolyline aLine;
         aLine.addVertex(finalPoint);
-        aLine.addVertex(finalPoint.x, -1000, finalPoint.z);
+        //aLine.addVertex(finalPoint.x, -1000, finalPoint.z);
+        aLine.addVertex(randomPoints[i]);
+        
         lines.push_back(aLine);
         
     }
     
-    subMesh = theMesh;
+    //subMesh = theMesh;
 
     
 }
@@ -72,6 +80,9 @@ void ContainmentBlob::draw(){
     
     ofSetColor(ofColor::red);
     for(int i=0;i<lines.size();i++){
+        float distance =lines[i].getVertices()[0].distance(lines[i].getVertices()[1] );
+        ofColor lineColor = ofColor(ofColor::red, ofMap(distance,1000,1500,0,255));
+        ofSetColor(lineColor);
         lines[i].draw();
     }
     

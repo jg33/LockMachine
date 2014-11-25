@@ -9,35 +9,41 @@
 #include "ContainmentPairScene.h"
 
 void ContainmentPairScene::setup(){
-    leftBlob = ContainmentBlob(ofVec3f(150,600));
-    rightBlob = ContainmentBlob(ofVec3f(650, 600));
+    leftBlob = ContainmentBlob(ofVec3f(250,600));
+    rightBlob = ContainmentBlob(ofVec3f(750, 600));
     
     ofEnableAlphaBlending();
     ofSetBackgroundAuto(false);
     
-    thisFrame.allocate(cam->getWidth(), cam->getHeight());
+    thisFrame.allocate(640,480);
     prevFrame = thisFrame;
+    
+    drawTex.allocate(ofGetWidth(), ofGetHeight());
+    drawTex.begin();
+    drawTex.end();
 }
 
 void ContainmentPairScene::update(){
-    cam->update();
+    
     
     int leftCount=0;
     int rightCount=0;
     
     int threshold = 50;
     
-    if(cam->isFrameNew()){
+    if(cvMan != NULL){
+    if(cvMan->bHasNewFrame){
         ofxCvColorImage colorImg;
-        colorImg.setFromPixels(cam->getPixels());
+        colorImg.allocate(cvMan->width, cvMan->height);
+        colorImg.setFromPixels(cvMan->getFrame());
         colorImg.convertToGrayscalePlanarImage(thisFrame, 0);
         
-        absDiff.allocate(cam->getWidth(), cam->getHeight());
+        absDiff.allocate(colorImg.getWidth(), colorImg.getHeight());
         absDiff.absDiff(thisFrame,prevFrame );
         ofPixels diffPix = absDiff.getPixels();
         
-        for (int x = 0;x<cam->getWidth()/2;x++){
-            for (int y = 0; y<cam->getHeight();y++){
+        for (int x = 0;x<colorImg.getWidth()/2;x+=2){
+            for (int y = 0; y<colorImg.getHeight();y+=2){
                 int pixBrightness = diffPix.getColor(x, y).getBrightness();
                 //cout<<pixBrightness<<endl;
 
@@ -49,8 +55,8 @@ void ContainmentPairScene::update(){
             
         }
         
-        for (int x = cam->getWidth()/2;  x< cam->getWidth();  x++){
-            for (int y = 0;  y < cam->getHeight();  y++){
+        for (int x = colorImg.getWidth()/2;  x< colorImg.getWidth();  x+=2){
+            for (int y = 0;  y < colorImg.getHeight();  y+=2){
                 int pixBrightness = diffPix.getColor(x, y).getBrightness();
                 if (pixBrightness > threshold){
                     leftCount++;
@@ -66,10 +72,10 @@ void ContainmentPairScene::update(){
         prevFrame   = thisFrame;
     }
     
-    cout<<"left: "<<rightCount<<endl;
+    }
     
-    leftBlob.targetSize= leftCount/10;
-    rightBlob.targetSize = rightCount/10;
+    leftBlob.targetSize= leftCount;
+    rightBlob.targetSize = rightCount;
     
     leftBlob.update();
     rightBlob.update();
@@ -78,17 +84,31 @@ void ContainmentPairScene::update(){
 }
 
 void ContainmentPairScene::draw(){
+    drawTex.begin();
+
     ofSetColor(0,0,0,15);
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     
     leftBlob.draw();
     rightBlob.draw();
+    drawTex.end();
+
+    //filter->begin();
+    
+    ofSetColor(255);
+    drawTex.draw(0, 0);
+    //filter->end();
+    
+    syphon->publishScreen();
     
     if (bIsDebug){
+
         ofSetColor(255,255);
         absDiff.draw(450, 10, 320, 240);
+
     }
     
+   
 
 }
 

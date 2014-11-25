@@ -12,7 +12,12 @@
 #include <stdio.h>
 #include "ofxAppUtils.h"
 #include "ofxOpenCv.h"
+#include "ofxFilterLibrary.h"
+#include "CvManager.h"
+#include "ofxSyphon.h"
+
 #include "ContainmentBlob.h"
+
 
 enum sides{
     LEFT,
@@ -24,6 +29,8 @@ class ContainmentPairScene: public ofxScene{
 public:
     ContainmentPairScene():ofxScene("ContainmentPair"){setup();};
     ContainmentPairScene(ofVideoGrabber * _grab):ofxScene("ContainmentPair"){cam=_grab;setup();};
+    ContainmentPairScene(CvManager * _cv):ofxScene("ContainmentPair"){cvMan = _cv;setup();};
+    ContainmentPairScene(CvManager * _cv, ofxSyphonServer* _syphon):ofxScene("ContainmentPair"){cvMan = _cv; syphon = _syphon; setup();};
     
     void setup();
     void update();
@@ -36,6 +43,7 @@ public:
 private:
     
     ofVideoGrabber * cam;
+    CvManager * cvMan;
     ofxCvGrayscaleImage thisFrame, prevFrame;
     ofxCvGrayscaleImage absDiff;
 
@@ -43,6 +51,11 @@ private:
     ContainmentBlob leftBlob;
     ContainmentBlob rightBlob;
     
+    ofFbo drawTex;
+    
+    KuwaharaFilter * filter = new KuwaharaFilter(0);
+    
+    ofxSyphonServer * syphon;
     
 };
 

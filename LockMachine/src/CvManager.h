@@ -15,20 +15,53 @@
 class CvManager: public ofThread{
     
 public:
-    //CvManager():ofThread(){};
     
-    void threadedFunction(){};
+    void threadedFunction(){
 
-    void setup(){};
-    void update(){};
+        
+        while(isThreadRunning()){
+
+            
+            
+            
+        }
     
-    bool bHasNewFrame(){return true;};
+    };
     
+    void setup(){
+        grabber.setDeviceID(1);
+        grabber.setup(width,height);
+        
+    }
+    
+    void update(){
+        grabber.update();
+        if(grabber.isFrameNew()){
+            bHasNewFrame = true;
+            image = grabber.getPixels();
+            
+        } else {
+            
+        }
+    }
+    
+    int width=640; int height =480;
+    
+    bool bHasNewFrame = false ;
+    
+    bool bIsSmoothing;
+    
+    ofImage getFrame(){return image; bHasNewFrame= false;};
     
 private:
     ofVideoGrabber grabber;
+    ofImage image;
     
+    int smoothing;
 };
+
+
+
 
 class ConnectionManager : public ofThread{
     

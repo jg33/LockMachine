@@ -10,16 +10,19 @@ void ofApp::setup(){
     
     ///CAMERA////
     //cam = ofVideoGrabber();
+    
+    //grabber.setDeviceID(1);
+    //grabber.setup(640, 480);
+    
+    cvMan.setup();
     //cvMan.startThread();
-    grabber.setup(640, 480);
-
 
     
     ///SCENE STUFF///
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     sceneManager.add(new ParticleScene());
-    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&grabber, &syphonServe));
-    containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&grabber));
+    hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&cvMan, &syphonServe));
+    containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&cvMan, &syphonServe));
     
     
     
@@ -69,7 +72,8 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    cvMan.update();
+    
     ofxOscMessage msg;
     
     while (oscIn.hasWaitingMessages()){
@@ -110,7 +114,7 @@ void ofApp::draw(){
 }
 
 void ofApp::exit(){
-    //cvMan.waitForThread(true);
+    cvMan.stopThread();
 }
 
 void ofApp::onGuiEvent(guiCallbackData & d){

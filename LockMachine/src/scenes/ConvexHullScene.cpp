@@ -34,13 +34,15 @@ void ConvexHullScene::setup(){
 }
 
 void ConvexHullScene::update(){
-    cam->update();
-    if (cam->isFrameNew()){
+    //cam->update();
+    
+    if (cvMan->bHasNewFrame){
         
         ofxCvColorImage color;
         ofxCvGrayscaleImage grey;
-
-        color.setFromPixels(cam->getPixels());
+        
+        color.allocate(cvMan->width, cvMan->height);
+        color.setFromPixels(cvMan->getFrame());
         grey.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
         color.convertToGrayscalePlanarImage(grey, 0);
         
@@ -73,6 +75,7 @@ void ConvexHullScene::update(){
             }
         
         }
+        
         conMan.lock();
         conMan.setHulls(hulls);
         conMan.unlock();
@@ -86,19 +89,6 @@ void ConvexHullScene::update(){
 
 void ConvexHullScene::draw(){
     ofBackground(0);
-    
-    if(bIsDebug){
-        ofRectangle camDrawRect = ofRectangle(ofGetWidth()-320  ,0   ,320,240);
-        ofPoint cvDrawPoint = ofPoint(ofGetWidth()-320,240);
-        ofRectangle cvDrawRect = ofRectangle(cvDrawPoint, 320, 240);
-        cvImg.draw(cvDrawRect);
-        cvContours.draw(cvDrawRect);
-        ofImage resizedCam;
-        resizedCam = cam->getPixels().getChannel(0);
-        resizedCam.resize(320, 240);
-        resizedCam.draw(camDrawRect);
-    
-    }
     
     ofTranslate(offsetX, offsetY);
     
@@ -119,6 +109,20 @@ void ConvexHullScene::draw(){
     drawConnections();
     
     syphon->publishScreen();
+    
+    
+    if(bIsDebug){
+        ofRectangle camDrawRect = ofRectangle(ofGetWidth()-320  ,0   ,320,240);
+        ofPoint cvDrawPoint = ofPoint(ofGetWidth()-320,240);
+        ofRectangle cvDrawRect = ofRectangle(cvDrawPoint, 320, 240);
+        cvImg.draw(cvDrawRect);
+        cvContours.draw(cvDrawRect);
+        ofImage resizedCam;
+        resizedCam = cvMan->getFrame();
+        resizedCam.resize(320, 240);
+        resizedCam.draw(camDrawRect);
+        
+    }
 }
 
 
@@ -206,75 +210,30 @@ void ConvexHullScene::makeConnections(int maxDist){
     }
     
     
-    /*
-    internalConnections.clear();
-    externalConnections.clear();
-    
-    
-    for (int i=0;i<hulls.size();i++){ //for each hull
-        
-        for(int j =0;j<hulls[i].size();j++){ //go through itspoints
-            ofPoint thisPoint = hulls[i][j];
-            
-            if(bDrawInternal){
-                for(int k =0;k<hulls[i].size();k++){ //each of those looks through its other points
-                    ofPoint thatPoint = hulls[i][k];
-                    if (thisPoint.distance(thatPoint) < maxDist) internalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
-                }
-            }
-            if(bDrawExternal){
-        
-                for (int k=0; k<hulls.size(); k++) { //and other hulls
-                    if (hulls[k]!=hulls[i]){
-                        for (int l=k; l<hulls[k].size(); l++) { //and other hulls' points
-                            ofPoint thatPoint = hulls[k][l];
-                            if (thisPoint.distance(thatPoint)< maxDist) externalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
-                            
-                        }
-                    }
-                    
-                }
-
-            }
-        }
-    }
-    
-    for(int i=0;i<tempPoints.size();i++){
-        ofPoint thisPoint = tempPoints[i];
-        
-        for (int j =0;j<tempPoints.size();j++){
-            ofPoint thatPoint = tempPoints[j];
-            if (thisPoint.distance(thatPoint)< maxDist) {
-                externalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
-            }
-        }
-        tempPoints.erase(tempPoints.begin());
-    }*/
-    
     
 }
 
 void ConvexHullScene::drawConnections(){
+    
+    ofMesh poly;
+    poly.setMode(OF_PRIMITIVE_LINES);
+    poly.setupIndicesAuto();
     if(bDrawInternal){
-        //ofNoFill();
-        //ofBeginShape();
+        
         for (int i=0; i<internalConnections.size(); i++) {
-            ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
-            ofDrawLine(internalConnections[i].first, internalConnections[i].second);
-            //ofVertex(internalConnections[i].first);
-            //ofVertex(internalConnections[i].second);
+            ofFloatColor thisColor = ofColor(255,ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );            //ofDrawLine(internalConnections[i].first, internalConnections[i].second);
+            poly.addVertex(internalConnections[i].first);
+            poly.addColor(thisColor);
+            poly.addVertex(internalConnections[i].second);
+            poly.addColor(thisColor);
         }
-        //ofEndShape();
+       
     }
     
     if (bDrawExternal){
-        
-        ofMesh poly;
-        poly.setMode(OF_PRIMITIVE_LINES);
-        poly.setupIndicesAuto();
+
         for (int i=0; i<externalConnections.size(); i++) {
-            //ofSetColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
-            //ofDrawLine(externalConnections[i].first, externalConnections[i].second);
+           
             ofFloatColor thisColor = ofColor(255, ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );
             
             poly.addVertex(externalConnections[i].first);
@@ -283,8 +242,9 @@ void ConvexHullScene::drawConnections(){
             poly.addColor(thisColor );
         
         }
-        poly.draw(  );
     }
+    poly.draw(  );
+
     
 }
 
