@@ -13,11 +13,15 @@
 #include "ofxAppUtils.h"
 #include "ofxColourTheory.h"
 #include "Particles.h"
+#include "ofxSyphon.h"
 
 class ParticleScene : public ofxScene{
     
 public:
     ParticleScene():ofxScene("Particles"){setSingleSetup(false);};
+    ParticleScene(ofxSyphonServer * _syphon):ofxScene("Particles"){syphon = _syphon; setSingleSetup(false);};
+
+    
     void setup();
     void update();
     void draw();
@@ -26,6 +30,7 @@ public:
     int partsToAdd =0;
     
 private:
+    ofxSyphonServer * syphon;
     
     ofxParticleManager pBoss;
     

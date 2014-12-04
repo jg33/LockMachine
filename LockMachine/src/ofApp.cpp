@@ -20,7 +20,7 @@ void ofApp::setup(){
     
     ///SCENE STUFF///
     circles = (CircleScene*) sceneManager.add(new CircleScene());
-    partScene = (ParticleScene*) sceneManager.add(new ParticleScene());
+    partScene = (ParticleScene*) sceneManager.add(new ParticleScene(&syphonServe));
     hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&cvMan, &syphonServe));
     containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&cvMan, &syphonServe));
     flow = (FlowScene*) sceneManager.add(new FlowScene(&cvMan, &syphonServe));
@@ -176,6 +176,24 @@ void ofApp::keyPressed(int key){
             case'p':
             partScene->partsToAdd = ofRandom(25,40);
             break;
+    }
+    if(sceneManager.getCurrentSceneName() == "Particles"){
+        switch (key) {
+            case '1':
+                partScene->partsToAdd = ofRandom(1,10);
+                break;
+            case '2':
+                partScene->partsToAdd = ofRandom(10,20);
+                break;
+            case '3':
+                partScene->partsToAdd = ofRandom(30,40);
+                break;
+            case '4':
+                partScene->partsToAdd = ofRandom(60,100);
+                break;
+            default:
+                break;
+        }
     }
 }
 

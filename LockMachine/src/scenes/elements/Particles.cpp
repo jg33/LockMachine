@@ -11,12 +11,12 @@
 void Dust::setup(){
     seed = ofRandom(6000);
     lifespan = ofRandom(1000,10000);
-    lift = 0.8;
-    decay = 0.8;
+    lift = ofRandom(0.7,0.9);
+    decay = ofRandom(0.7,0.9);
     
     color = ofColor(0);
     
-    push(ofVec3f(0,ofRandom(-10,-25),0));
+    push(ofVec3f(0,ofRandom(-1,-15),0));
 }
 
 void Dust::customUpdate(){

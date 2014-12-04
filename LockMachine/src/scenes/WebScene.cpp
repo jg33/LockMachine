@@ -25,7 +25,7 @@ void WebScene::update(){
     }
     
     for (int i=0; i<connectingPoints.size(); i++) {
-        <#statements#>
+        ;
     }
     
 }

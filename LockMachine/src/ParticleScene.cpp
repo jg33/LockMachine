@@ -45,6 +45,6 @@ void ParticleScene::draw(){
     
     //ofDrawRectangle(50, 50, 50, 50);
     
-
+    syphon->publishScreen();
 }
 

@@ -46,9 +46,11 @@ void ContainmentBlob::update(){
     
     lines.clear();
     
+    meshShape.clear();
+    
     for(int i=0;i<baseMesh.getNumVertices();i++){
         
-        ofVec3f oldPoint = baseMesh.getVertices()[i].scale(size);
+        ofVec3f oldPoint = baseMesh.getVertex(i).scale(size);
         ofVec3f noiseVec = ofVec3f(ofSignedNoise(speed*i+ofGetElapsedTimef() ),ofSignedNoise(speed* 1.33*i+ofGetElapsedTimef()+33.3),ofSignedNoise(speed*1.77*i+ofGetElapsedTimef()+104.25));
         noiseVec.scale(ofMap(sizeDiff, 0, 25, 3, 10));
         
@@ -62,13 +64,16 @@ void ContainmentBlob::update(){
         ofPolyline aLine;
         aLine.addVertex(finalPoint);
         //aLine.addVertex(finalPoint.x, -1000, finalPoint.z);
-        aLine.addVertex(randomPoints[i]);
+        aLine.addVertex(finalPoint.x,-10000);
         
         lines.push_back(aLine);
         
+        meshShape.curveTo(theMesh.getVertex(i));
+        
     }
-    
-    //subMesh = theMesh;
+    meshShape.close();
+    meshTess    = meshShape.getTessellation();
+        //subMesh = theMesh;
 
     
 }
@@ -81,25 +86,30 @@ void ContainmentBlob::draw(){
     ofSetColor(ofColor::red);
     for(int i=0;i<lines.size();i++){
         float distance =lines[i].getVertices()[0].distance(lines[i].getVertices()[1] );
-        ofColor lineColor = ofColor(ofColor::red, ofMap(distance,1000,1500,0,255));
+        ofColor lineColor = ofColor(50, ofMap(distance,1000,1500,0,255));
         ofSetColor(lineColor);
         lines[i].draw();
     }
     
-    ofSetColor(255);
-    theMesh.drawWireframe();
+    ofSetColor(ofColor::blueSteel);
+    //theMesh.draw();
+    //meshShape.setColor(150);
+    //meshShape.draw();
+    meshTess.draw();
+    
     
     float noiseScale1 = ofMap(ofNoise(ofGetElapsedTimef()*0.1), 0, 1, 0.7, 1.2);
     float noiseScale2 = ofMap(ofNoise(66.6+(ofGetElapsedTimef()*0.05)), 0, 1, 0.3, 0.8);
 
     ofScale(noiseScale1,noiseScale1);
     ofRotate(ofGetElapsedTimef()*10, -1, -3.3, -0.7);
-    ofSetColor(150);
-    theMesh.drawWireframe();
+    ofSetColor(ofColor::blueViolet);
+    meshTess.draw();
+
     ofScale(noiseScale2, noiseScale2);
     ofRotate(ofGetElapsedTimef()*2, 1, -4.5, 2.9);
-    ofSetColor(ofColor::black);
-    theMesh.draw();
+    ofSetColor(ofColor::orangeRed);
+    meshTess.draw();
     ofPopMatrix();
     
     

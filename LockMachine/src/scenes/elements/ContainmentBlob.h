@@ -31,6 +31,9 @@ private:
     
     ofMesh theMesh, subMesh, baseMesh;
     
+    ofPath meshShape;
+    ofMesh meshTess;
+    
     vector<ofPolyline> lines;
     
     int seed;
