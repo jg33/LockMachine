@@ -10,7 +10,6 @@
 
 void ParticleScene::setup(){
     pBoss = ofxParticleManager();
-    cout<<"setup particles!"<<endl;
     
     ofColor primaryColor = ofColor::goldenRod;
     pallette = colorMaker.createColoursFromStrategy(primaryColor, CT_SPLIT_COMPLEMENTARY);
@@ -20,8 +19,23 @@ void ParticleScene::setup(){
 
 void ParticleScene::update(){
     ofColor thisColor = pallette.at(floor(ofRandom(pallette.size())));
+    
+    /*
+    if(ofRandomuf()<flow){
+        pBoss.addParticle( new Dust(ofVec2f(ofRandomuf()*ofGetWidth(), ofGetHeight()+10)) ) ;
+        
+    }
+    */
+    for (int i=0; i<partsToAdd; i++) {
+        pBoss.addParticle( new Dust(ofVec2f(ofRandomuf()*ofGetWidth(), ofGetHeight()+10)) );
+        
+    }
+    partsToAdd = 0;
+    
+    
     pBoss.update();
 
+    
     
 }
 
@@ -29,7 +43,8 @@ void ParticleScene::draw(){
     ofBackground(0);
     pBoss.draw();
     
-    ofDrawRectangle(50, 50, 50, 50);
+    //ofDrawRectangle(50, 50, 50, 50);
     
 
 }
+

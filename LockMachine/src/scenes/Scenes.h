@@ -13,6 +13,8 @@
 #include "CircleScene.h"
 #include "ConvexHullScene.h"
 #include "ContainmentPairScene.h"
+#include "FlowScene.h"
+#include "WebScene.h"
 
 
 #endif

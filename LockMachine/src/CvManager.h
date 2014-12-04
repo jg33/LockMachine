@@ -29,7 +29,7 @@ public:
     };
     
     void setup(){
-        grabber.setDeviceID(1);
+        grabber.setDeviceID(0);
         grabber.setup(width,height);
         
     }
@@ -52,6 +52,8 @@ public:
     bool bIsSmoothing;
     
     ofImage getFrame(){return image; bHasNewFrame= false;};
+    
+    void close(){grabber.close();};
     
 private:
     ofVideoGrabber grabber;

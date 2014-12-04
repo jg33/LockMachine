@@ -14,6 +14,9 @@
 class CircleScene;
 class ConvexHullScene;
 class ContainmentPairScene;
+class FlowScene;
+class ParticleScene;
+class WebScene;
 
 class ofApp : public ofxApp{
 
@@ -45,6 +48,9 @@ private:
     CircleScene * circles;
     ConvexHullScene * hullScene;
     ContainmentPairScene * containment;
+    FlowScene * flow;
+    ParticleScene * partScene;
+    WebScene * web;
     
     ofVideoGrabber grabber;
     CvManager cvMan;

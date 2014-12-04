@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    syphonServe.setName("String Machine");
+    syphonServe.setName("Lock Machine");
     oscIn.setup(6666);
     ofSetVerticalSync(true);
     ofSetSmoothLighting(true);
@@ -20,13 +20,13 @@ void ofApp::setup(){
     
     ///SCENE STUFF///
     circles = (CircleScene*) sceneManager.add(new CircleScene());
-    sceneManager.add(new ParticleScene());
+    partScene = (ParticleScene*) sceneManager.add(new ParticleScene());
     hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&cvMan, &syphonServe));
     containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&cvMan, &syphonServe));
+    flow = (FlowScene*) sceneManager.add(new FlowScene(&cvMan, &syphonServe));
+    web = (WebScene*) sceneManager.add(new WebScene() );
     
-    
-    
-    sceneManager.gotoScene("ContainmentPair", true);
+    sceneManager.gotoScene("Web", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     setSceneManager(&sceneManager);
@@ -99,10 +99,11 @@ void ofApp::update(){
     
     
     
+    
     //circles->setSizes(micInputs);
     //connections->setPoints(&POIs);
     
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    ofSetWindowTitle(sceneManager.getCurrentSceneName()+" @ "+  ofToString(ofGetFrameRate()));
     
 }
 
@@ -172,7 +173,9 @@ void ofApp::keyPressed(int key){
             case 'f':
             ofToggleFullscreen();
             break;
-            
+            case'p':
+            partScene->partsToAdd = ofRandom(25,40);
+            break;
     }
 }
 
@@ -193,6 +196,10 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    if(sceneManager.getCurrentSceneName() == "Web"){
+        web->addPoint(ofPoint(x,y));
+        
+    }
 
 }
 

@@ -12,6 +12,7 @@
 #include <iostream>
 #include "ofxAppUtils.h"
 #include "ofxColourTheory.h"
+#include "Particles.h"
 
 class ParticleScene : public ofxScene{
     
@@ -20,6 +21,9 @@ public:
     void setup();
     void update();
     void draw();
+    
+    float flow = 1;
+    int partsToAdd =0;
     
 private:
     
