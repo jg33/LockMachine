@@ -19,7 +19,7 @@
 #define VIDEO_WIDTH 640
 #define VIDEO_HEIGHT 480
 
-
+class Hull;
 
 
 class ConvexHullScene : public ofxScene{
@@ -51,6 +51,8 @@ public:
     int cvMinArea, cvMaxArea, cvNConsidered, cvThreshold;
     float inputSmoothing;
     
+    float simplification=10;
+    
 private:
     ofxSyphonServer * syphon;
     
@@ -65,6 +67,8 @@ private:
     vector<ofPoint> getConvexHull(vector<ofPoint> points);
     vector< vector<ofPoint> > hulls;
     ofPoint h1,h2,h3;
+    
+    //vector<Hull> newHulls;
     
     /// Connection Stuff ///
     vector< pair<ofPoint,ofPoint> > internalConnections, externalConnections;
@@ -84,6 +88,19 @@ private:
 
 
 
-
+class Hull{
+    
+public:
+    Hull(){};
+    Hull(vector<ofPoint> _hull){ targetHull = _hull; hull=targetHull;};
+    void update();
+    void set( vector<ofPoint> _newHull);
+    void draw();
+    
+private:
+    vector<ofPoint> points;
+    vector<ofPoint> previousHull, hull, targetHull;
+    
+};
 
 #endif /* defined(__LockMachine__ConvexHullScene__) */

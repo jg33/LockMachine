@@ -8,10 +8,22 @@
 
 #include "ConvexHullScene.h"
 
+bool blobSizeSorter(ofxCvBlob first, ofxCvBlob second){
+    float firstSize = first.boundingRect.width * first.boundingRect.height;
+    float secondSize = second.boundingRect.width * second.boundingRect.height;
+
+    return firstSize > secondSize;
+}
+
+bool pointXSorter(ofPoint first, ofPoint second){
+    
+    return first.x > second.x;
+}
 
 void ConvexHullScene::setup(){
     //grabber.initGrabber(VIDEO_WIDTH ,VIDEO_HEIGHT);
     //cam = &grabber;
+    ofEnableAlphaBlending();
     
     cvImg.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
     currentFrame.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
@@ -67,14 +79,44 @@ void ConvexHullScene::update(){
         
         if(hulls.size()>0) hulls.clear();
         for (int i=0;i< cvContours.blobs.size();i++){
-            hulls.push_back(getConvexHull(cvContours.blobs[i].pts));
-            
-            for (int i=0; i<hulls.size(); i++) {
-                
+            ofPolyline simplifier;
+            simplifier.addVertices(cvContours.blobs[i].pts);
+            //hulls.push_back(getConvexHull(cvContours.blobs[i].pts));
+            simplifier.simplify(simplification);
+            if (simplifier.getVertices().size()>2){
+                hulls.push_back(getConvexHull(simplifier.getVertices()));
                 
             }
+            
         
         }
+        
+        //NEWCRAP
+        /*
+        vector<ofxCvBlob> blobs = cvContours.blobs;
+        sort(blobs.begin(), blobs.end(), blobSizeSorter );
+        
+        if ( blobs.size() > newHulls.size() ){
+            for (int i=newHulls.size(); i<blobs.size(); i++) {
+                newHulls.push_back( Hull(getConvexHull(blobs[i].pts) ));
+            }
+        } else if (blobs.size() < newHulls.size() ){
+            for (int i=newHulls.size(); i<blobs.size(); i--) {
+                newHulls.erase(newHulls.end())   ;
+            }
+        } else {}
+        
+        for (int i=0; i<blobs.size(); i++) {
+            newHulls[i].set( getConvexHull(blobs[i].pts) ) ;
+
+        }
+        
+        for(int i=0;i<newHulls.size();i++){
+            newHulls[i].update();
+        }
+         */
+        
+        ///
         
         conMan.lock();
         conMan.setHulls(hulls);
@@ -88,7 +130,7 @@ void ConvexHullScene::update(){
 }
 
 void ConvexHullScene::draw(){
-    ofBackground(0);
+    ofBackground(0,10);
     
     ofTranslate(offsetX, offsetY);
     
@@ -103,8 +145,18 @@ void ConvexHullScene::draw(){
             p.addVertex(hulls[i][j].x, hulls[i][j].y);
         }
         p.close();
+        p.simplify(2);
         p.draw();
     }
+    
+    
+    //NEWCRAP
+    /*
+    for(int i=0;i< newHulls.size();i++){
+        newHulls[i].draw();
+    }
+     */
+    ///
     
     drawConnections();
     
@@ -285,5 +337,44 @@ ofPixels ConvexHullScene::dumbResize(ofPixels input, int division){
     
 }
 
+
+
+
+///HULL///
+
+void Hull::set(vector<ofPoint> _newHull){
+    targetHull = _newHull;
+    sort(targetHull.begin(),targetHull.end(),pointXSorter);
+
+    
+    if(targetHull.size()>hull.size()){
+        for (int i = hull.size(); i<targetHull.size(); i++) {
+            hull.push_back(targetHull[i]);
+        }
+    }
+    
+}
+
+void Hull::update(){
+    
+    //hull.clear();
+    for (int i=0; i<targetHull.size(); i++) {
+        
+        hull[i] += (targetHull[i]-hull[i])*0.1 ;
+        
+    }
+    
+}
+
+void Hull::draw(){
+    
+        ofPolyline p;
+        for (int i=0;i<hull.size();i++){
+            p.addVertex(hull[i].x, hull[i].y);
+        }
+        p.close();
+        p.draw();
+
+}
 
 

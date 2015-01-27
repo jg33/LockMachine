@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "ofMain.h"
+#include "ofxPS3EyeGrabber.h"
 
 class CvManager: public ofThread{
     
@@ -29,12 +30,14 @@ public:
     };
     
     void setup(){
-        grabber.setDeviceID(0);
-        grabber.setup(width,height);
-        
+        //grabber.setDeviceID(0);
+        //grabber.setup(width,height);
+        eye1.setup(width  , height);
+        eye1.setPixelFormat(OF_PIXELS_RGB);
     }
     
     void update(){
+        /*
         grabber.update();
         if(grabber.isFrameNew()){
             bHasNewFrame = true;
@@ -43,6 +46,15 @@ public:
         } else {
             
         }
+         */
+        //cout<< eye1.getWidth()<<endl;
+        
+        eye1.update();
+        if(eye1.isFrameNew()){
+            bHasNewFrame = true;
+            image = eye1.getPixels();
+            
+        }else{}
     }
     
     int width=640; int height =480;
@@ -57,6 +69,7 @@ public:
     
 private:
     ofVideoGrabber grabber;
+    ofxPS3EyeGrabber eye1;
     ofImage image;
     
     int smoothing;
