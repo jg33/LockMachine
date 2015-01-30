@@ -27,6 +27,7 @@ void ConvexHullScene::setup(){
     
     cvImg.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
     currentFrame.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
+    background.allocate(VIDEO_WIDTH, VIDEO_HEIGHT);
     
     cout<<"setup hulls!"<<endl;
     offsetX=0;
@@ -50,13 +51,19 @@ void ConvexHullScene::update(){
     
     if (cvMan->bHasNewFrame){
         
-        ofxCvColorImage color;
         ofxCvGrayscaleImage grey;
+        ofxCvColorImage color;
+        ofImage thisFrame;
         
+        thisFrame.allocate(640 , 480, OF_IMAGE_COLOR);
+        thisFrame.setFromPixels( cvMan->getFrame() );
         color.allocate(cvMan->width, cvMan->height);
-        color.setFromPixels(cvMan->getFrame());
+        color.setFromPixels(thisFrame);
+        
+        thisFrame.setImageType(OF_IMAGE_GRAYSCALE);
         grey.allocate(VIDEO_WIDTH ,VIDEO_HEIGHT);
-        color.convertToGrayscalePlanarImage(grey, 0);
+        //color.convertToGrayscalePlanarImage(grey, 0);
+        grey.setFromPixels(thisFrame);
         
         if(inputSmoothing>0){
             currentFrame.setFromPixels(smoothImage(currentFrame.getPixels() , grey.getPixels(), inputSmoothing));
@@ -74,7 +81,6 @@ void ConvexHullScene::update(){
         cvImg.absDiff(background);
         cvImg.threshold(cvThreshold);
         cvContours.findContours(cvImg, cvMinArea, cvMaxArea, cvNConsidered, false,true);
-        
         
         
         if(hulls.size()>0) hulls.clear();
@@ -162,6 +168,7 @@ void ConvexHullScene::draw(){
     
     syphon->publishScreen();
     
+
     
     if(bIsDebug){
         ofRectangle camDrawRect = ofRectangle(ofGetWidth()-320  ,0   ,320,240);

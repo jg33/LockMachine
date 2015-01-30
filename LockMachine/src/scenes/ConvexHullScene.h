@@ -84,6 +84,10 @@ private:
     
     /// resizer ///
     ofPixels dumbResize(ofPixels input, int division);
+    
+    
+    
+
 };
 
 

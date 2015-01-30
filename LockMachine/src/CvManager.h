@@ -32,6 +32,7 @@ public:
     void setup(){
         //grabber.setDeviceID(0);
         //grabber.setup(width,height);
+        image.allocate(width, height, OF_IMAGE_COLOR);
         eye1.setup(width  , height);
         eye1.setPixelFormat(OF_PIXELS_RGB);
     }
@@ -52,8 +53,7 @@ public:
         eye1.update();
         if(eye1.isFrameNew()){
             bHasNewFrame = true;
-            image = eye1.getPixels();
-            
+            image.setFromPixels( eye1.getPixels() );
         }else{}
     }
     
@@ -66,10 +66,12 @@ public:
     ofImage getFrame(){return image; bHasNewFrame= false;};
     
     void close(){grabber.close();};
+
     
 private:
     ofVideoGrabber grabber;
-    ofxPS3EyeGrabber eye1;
+    ofxPS3EyeGrabber eye1, eye2;
+
     ofImage image;
     
     int smoothing;
