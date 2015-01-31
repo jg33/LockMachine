@@ -1,22 +1,22 @@
 //
-//  RawScene.cpp
+//  MeshBuildScene.cpp
 //  LockMachine
 //
-//  Created by Jesse Garrison on 1/27/15.
+//  Created by Jesse Garrison on 1/30/15.
 //
 //
 
-#include "RawScene.h"
+#include "MeshBuildScene.h"
 
-void RawScene::setup(){
+void MeshBuildScene::setup(){
     
 }
 
-void RawScene::update(){
+void MeshBuildScene::update(){
     
 }
 
-void RawScene::draw(){
+void MeshBuildScene::draw(){
     ofImage img;
     img.setFromPixels(cvMan->getFrame());
     img.setImageType(OF_IMAGE_GRAYSCALE);

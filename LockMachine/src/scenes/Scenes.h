@@ -15,6 +15,8 @@
 #include "ContainmentPairScene.h"
 #include "FlowScene.h"
 #include "WebScene.h"
-
+#include "RawScene.h"
+#include "ConeScene.h"
+#include "DifferenceScene.h"
 
 #endif

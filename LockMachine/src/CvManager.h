@@ -30,31 +30,33 @@ public:
     };
     
     void setup(){
-        //grabber.setDeviceID(0);
-        //grabber.setup(width,height);
+        iSight.setDeviceID(0);
+        iSight.setup(width,height);
+        
         image.allocate(width, height, OF_IMAGE_COLOR);
         eye1.setup(width  , height);
         eye1.setPixelFormat(OF_PIXELS_RGB);
     }
     
     void update(){
-        /*
-        grabber.update();
-        if(grabber.isFrameNew()){
+        
+        iSight.update();
+        if(iSight.isFrameNew()){
             bHasNewFrame = true;
-            image = grabber.getPixels();
+            image = iSight.getPixels();
             
         } else {
-            
+            bHasNewFrame = false;
         }
-         */
-        //cout<< eye1.getWidth()<<endl;
         
+        //cout<< eye1.getWidth()<<endl;
+        /*
         eye1.update();
         if(eye1.isFrameNew()){
             bHasNewFrame = true;
-            image.setFromPixels( eye1.getPixels() );
+           // image.setFromPixels( eye1.getPixels() );
         }else{}
+         */
     }
     
     int width=640; int height =480;
@@ -65,11 +67,18 @@ public:
     
     ofImage getFrame(){return image; bHasNewFrame= false;};
     
-    void close(){grabber.close();};
+    void close(){iSight.close();};
+    
+    void setGain1(float f){
+        eye1.setGain(f);
+    }
+    void setBrightness1(float f){
+        eye1.setBrightness(f);
+    }
 
     
 private:
-    ofVideoGrabber grabber;
+    ofVideoGrabber iSight;
     ofxPS3EyeGrabber eye1, eye2;
 
     ofImage image;
