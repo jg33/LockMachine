@@ -13,6 +13,13 @@
 #include "ofMain.h"
 #include "ofxPS3EyeGrabber.h"
 
+enum camera{
+    CAM_ISIGHT,
+    CAM_EYE_1,
+    CAM_EYE_2
+    
+};
+
 class CvManager: public ofThread{
     
 public:
@@ -30,33 +37,62 @@ public:
     };
     
     void setup(){
-        iSight.setDeviceID(0);
-        iSight.setup(width,height);
+        activeCamera = CAM_EYE_1;
+        bIsSmoothing = true;
+        smoothing = 0.7;
+        
+        //iSight.setDeviceID(0);
+       // iSight.setup(width,height);
         
         image.allocate(width, height, OF_IMAGE_COLOR);
+        prevImage.setFromPixels(image);
+        
         eye1.setup(width  , height);
         eye1.setPixelFormat(OF_PIXELS_RGB);
+        
+        eye2.setDeviceID(1);
+        eye2.setup(width  , height);
+        eye2.setPixelFormat(OF_PIXELS_RGB);
     }
     
     void update(){
         
-        iSight.update();
-        if(iSight.isFrameNew()){
-            bHasNewFrame = true;
-            image = iSight.getPixels();
-            
-        } else {
-            bHasNewFrame = false;
+        switch (activeCamera){
+            case CAM_ISIGHT:
+                iSight.update();
+                if(iSight.isFrameNew()){
+                    bHasNewFrame = true;
+                    image = iSight.getPixels();
+                    
+                } else {
+                    bHasNewFrame = false;
+                }
+                break;
+            case CAM_EYE_1:
+                eye1.update();
+                if(eye1.isFrameNew()){
+                    bHasNewFrame = true;
+                    image.setFromPixels( eye1.getPixels() );
+                }else{}
+                break;
+            case CAM_EYE_2:
+                eye2.update();
+                if(eye2.isFrameNew()){
+                    bHasNewFrame = true;
+                    image.setFromPixels( eye2.getPixels() );
+                }else{}
+                break;
+            default:
+                break;
+                
+                
         }
         
-        //cout<< eye1.getWidth()<<endl;
-        /*
-        eye1.update();
-        if(eye1.isFrameNew()){
-            bHasNewFrame = true;
-           // image.setFromPixels( eye1.getPixels() );
-        }else{}
-         */
+        if(bIsSmoothing){
+            image = smoothImage(prevImage, image, smoothing);
+            prevImage.setFromPixels(image);
+        }
+        
     }
     
     int width=640; int height =480;
@@ -65,8 +101,13 @@ public:
     
     bool bIsSmoothing;
     
-    ofImage getFrame(){return image; bHasNewFrame= false;};
+    camera activeCamera;
     
+    ofImage getFrame(){return image; bHasNewFrame= false;};
+    //ofImage getSmoothed(){return smoothImage(prevImage, image, smoothing); bHasNewFrame= false;};
+
+    float smoothing;
+
     void close(){iSight.close();};
     
     void setGain1(float f){
@@ -75,15 +116,39 @@ public:
     void setBrightness1(float f){
         eye1.setBrightness(f);
     }
+    
+    void setGain2(float f){
+        eye2.setGain(f);
+    }
+    void setBrightness2(float f){
+        eye2.setBrightness(f);
+    }
 
     
 private:
     ofVideoGrabber iSight;
     ofxPS3EyeGrabber eye1, eye2;
 
-    ofImage image;
+    ofImage image, prevImage;
     
-    int smoothing;
+    
+    ofPixels smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing){
+        ofPixels smoothedImage;
+        smoothedImage.allocate(oldPix.getWidth(), oldPix.getHeight(), OF_PIXELS_RGBA);
+        
+        
+        
+        for (int i=0; i<smoothedImage.size();i++){
+            try{
+                smoothedImage[i] = (oldPix[i]*smoothing )+ (newPix[i]*(1-smoothing));
+            }catch (...){
+                
+            }
+        }
+        
+        return smoothedImage;
+        
+    }
 };
 
 

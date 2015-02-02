@@ -49,7 +49,6 @@ public:
         cvNConsidered = num;
     };
     int cvMinArea, cvMaxArea, cvNConsidered, cvThreshold;
-    float inputSmoothing;
     
     float simplification=10;
     
@@ -79,7 +78,7 @@ private:
 
     
     /// Smoothing ///
-    ofPixels smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing);
+
     ofxCvGrayscaleImage currentFrame;
     
     /// resizer ///

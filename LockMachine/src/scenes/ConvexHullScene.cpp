@@ -65,12 +65,9 @@ void ConvexHullScene::update(){
         //color.convertToGrayscalePlanarImage(grey, 0);
         grey.setFromPixels(thisFrame);
         
-        if(inputSmoothing>0){
-            currentFrame.setFromPixels(smoothImage(currentFrame.getPixels() , grey.getPixels(), inputSmoothing));
-            
-        } else{
-            currentFrame.setFromPixels(grey.getPixels());
-        }
+
+        currentFrame.setFromPixels(grey.getPixels());
+        
         cvImg.setFromPixels(currentFrame.getPixels());
 
         if(bIsGrabbingBackground){
@@ -308,25 +305,6 @@ void ConvexHullScene::drawConnections(){
 }
 
 
-/// Smoothing ///
-
-ofPixels ConvexHullScene::smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing){
-    ofPixels smoothedImage;
-    smoothedImage.allocate(oldPix.getWidth(), oldPix.getHeight(), oldPix.getNumChannels());
-    
-    
-    
-    for (int i=0; i<smoothedImage.size();i++){
-        try{
-        smoothedImage[i] = (oldPix[i]*smoothing )+ (newPix[i]*(1-smoothing));
-        }catch (...){
-            
-        }
-    }
-    
-    return smoothedImage;
-    
-}
 
 // dumb resize //
 

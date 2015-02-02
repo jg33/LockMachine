@@ -13,6 +13,9 @@
 #include "ofxAppUtils.h"
 #include "ofxSyphon.h"
 #include "CvManager.h"
+#include "ofxDelaunay.h"
+
+#define THRESHOLD 200
 
 class MeshBuildScene : public ofxScene{
 public:
@@ -24,6 +27,11 @@ private:
     
     CvManager * cvMan;
     ofxSyphonServer * syphon;
+    
+    ofImage previousFrame;
+    ofMesh mesh;
+    
+    
     
 };
 

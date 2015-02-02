@@ -18,5 +18,6 @@
 #include "RawScene.h"
 #include "ConeScene.h"
 #include "DifferenceScene.h"
+#include "MeshBuildScene.h"
 
 #endif

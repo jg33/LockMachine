@@ -29,8 +29,9 @@ void ofApp::setup(){
     sceneManager.add(new RawScene(&cvMan, &syphonServe));
     sceneManager.add(new ConeScene(&cvMan, &syphonServe));
     sceneManager.add(new DifferenceScene(&cvMan, &syphonServe));
+    sceneManager.add(new MeshBuildScene(&cvMan, &syphonServe));
     
-    sceneManager.gotoScene("DifferenceScene", true);
+    sceneManager.gotoScene("MeshBuildScene", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     setSceneManager(&sceneManager);
@@ -40,6 +41,14 @@ void ofApp::setup(){
     addTransformControls();
     setDrawControlPanel(true);
     setDrawFramerate(true);
+    
+    controlPanel.addPanel("Camera Control", 1);
+    controlPanel.setWhichPanel("Camera Control");
+    controlPanel.addSlider("Input Smoothing", "InputSmoothing", 0.7, 0, 1, false);
+    controlPanel.addSlider("Eye1 Gain", "1gain", 32, 0, 63, false);
+    controlPanel.addSlider("Eye1 Brightness", "1brightness", 32, 0, 63, false);
+    controlPanel.addSlider("Eye2 Gain", "2gain", 32, 0, 63, false);
+    controlPanel.addSlider("Eye2 Brightness", "2brightness", 32, 0, 63, false);
     
     controlPanel.addPanel("ConvexHull Control",1);
     controlPanel.setWhichPanel("ConvexHull Control");
@@ -51,7 +60,6 @@ void ofApp::setup(){
     controlPanel.addToggle("Draw Internals", "drawInternals", false);
     controlPanel.addToggle("Draw Externals", "drawExternals", false);
     controlPanel.addSlider("Maximum Distance", "MaxDist", 50, 0, 100, true);
-    controlPanel.addSlider("Input Smoothing", "InputSmoothing", 0.7, 0, 1, false);
     controlPanel.addSlider("Contour Simplificaiton", "ContSimp", 5, 0, 30, false);
 
     controlPanel.addPanel("Extras", 1);
@@ -60,13 +68,7 @@ void ofApp::setup(){
     controlPanel.addSlider2D("POI1", "POI1", ofGetWidth()/2, ofGetHeight()/2, 0, ofGetWidth(), 0, ofGetHeight(), false);
     controlPanel.addSlider2D("POI2", "POI2", ofGetWidth()/2, ofGetHeight()/2, 0, ofGetWidth(), 0, ofGetHeight(), false);
     controlPanel.addSlider2D("POI3", "POI3", ofGetWidth()/2, ofGetHeight()/2, 0, ofGetWidth(), 0, ofGetHeight(), false);
-    
-    controlPanel.addPanel("Camera Control", 1);
-    controlPanel.setWhichPanel("Camera Control");
-    controlPanel.addSlider("Gain", "gain", 32, 0, 63, false);
-    controlPanel.addSlider("Brightness", "brightness", 32, 0, 63, false);
 
-    
     
     controlPanel.setupEvents();
     controlPanel.enableEvents();
@@ -144,28 +146,32 @@ void ofApp::onGuiEvent(guiCallbackData & d){
         hullScene->maxDist = d.getInt(0);
     } else if(d.getXmlName() == "cvMin"){
         hullScene->cvMinArea = d.getInt(0);
-    }else if(d.getXmlName() == "cvMax"){
+    } else if(d.getXmlName() == "cvMax"){
         hullScene->cvMaxArea = d.getInt(0);
 
-    }else if(d.getXmlName() == "cvNConsidered"){
+    } else if(d.getXmlName() == "cvNConsidered"){
         hullScene->cvNConsidered = d.getInt(0);
 
-    }else if(d.getXmlName() == "cvThreshold"){
+    } else if(d.getXmlName() == "cvThreshold"){
         hullScene->cvThreshold = d.getInt(0);
         
     } else if(d.getXmlName() == "drawInternals"){
         hullScene->bDrawInternal = d.getInt(0);
         
-    }else if(d.getXmlName() == "drawExternals"){
+    } else if(d.getXmlName() == "drawExternals"){
         hullScene->bDrawExternal = d.getInt(0);
         
-    }else if(d.getXmlName() == "InputSmoothing"){
-        hullScene->inputSmoothing = d.getFloat(0);
     } else if (d.getXmlName() == "ContSimp"){
         hullScene->simplification = d.getFloat(0);
-    } else if (d.getXmlName() =="gain"){
+    } else if(d.getXmlName() == "InputSmoothing"){
+        cvMan.smoothing = d.getFloat(0);
+    } else if (d.getXmlName() =="1gain"){
         cvMan.setGain1(d.getFloat(0));
-    } else if (d.getXmlName() =="brightness"){
+    } else if (d.getXmlName() =="1brightness"){
+        cvMan.setBrightness1(d.getFloat(0));
+    } else if (d.getXmlName() =="2gain"){
+        cvMan.setGain1(d.getFloat(0));
+    } else if (d.getXmlName() =="2brightness"){
         cvMan.setBrightness1(d.getFloat(0));
     }
     
