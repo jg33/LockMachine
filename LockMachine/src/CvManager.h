@@ -30,7 +30,7 @@ public:
         
         while(isThreadRunning()){
 
-            
+            update();
             
             
         }
@@ -40,29 +40,39 @@ public:
     void setup(){
         activeCamera = CAM_EYE_1;
         bIsSmoothing = false;
-        smoothing = 0.7;
+        smoothing = 0;
         
         if(activeCamera == CAM_ISIGHT){
             iSight.setDeviceID(0);
             iSight.setup(width,height);
+            iSight.setPixelFormat(OF_PIXELS_RGBA);
+            iSight.setUseTexture(false);
         }
        
-        eye1.setDesiredFrameRate(30);
+        eye1.setDesiredFrameRate(60);
         image.allocate(width, height, OF_IMAGE_COLOR);
-        prevImage.setFromPixels(image);
+        prevImage = image ;
         
         eye1.setup(width  , height);
-        eye1.setPixelFormat(OF_PIXELS_RGB);
+        eye1.setPixelFormat(OF_PIXELS_RGBA);
         
         eye2.setDeviceID(1);
+        eye2.setDesiredFrameRate(60);
+
         eye2.setup(width  , height);
-        eye2.setPixelFormat(OF_PIXELS_RGB);
+        eye2.setPixelFormat(OF_PIXELS_RGBA);
         
         currentCvImage.allocate(width  , height);
         prevCvImage.allocate(width, height);
+        diff.allocate(width, height);
+        
+        smoothedImage.allocate(width, height, OF_PIXELS_RGBA);
+
     }
     
     void update(){
+        ofPixels tempImg;
+        tempImg.allocate(width,height,OF_PIXELS_RGBA);
         
         if(smoothing<= 0.01){
             bIsSmoothing=false;
@@ -75,20 +85,24 @@ public:
                 iSight.update();
                 if(iSight.isFrameNew()){
                     
-                    updateCv(iSight.getPixels());
+                    if(bIsCalculatingCV) updateCv(iSight.getPixels());
                     if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
+                        
                         bHasNewFrame = true;
-                        image = iSight.getPixels();
-                    
+                        tempImg = iSight.getPixels() ;
+                        
                         if(bIsSmoothing){
-                            image = smoothImage(prevImage, image, smoothing);
-                            prevImage.setFromPixels(image);
+                            image = smoothImage(prevImage, tempImg,smoothing);
+                            prevImage = image;
+                        } else {
+                            image = tempImg;
                         }
-                    } else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
-                        cout<<"caught one!"<<endl;
+                    }else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
+                        cout<<"caught a glitch on iSight!"<<endl;
                     }
+
                 } else {
-                    bHasNewFrame = false;
+                    //bHasNewFrame = false;
                 }
                 break;
             case CAM_EYE_1:
@@ -99,18 +113,20 @@ public:
                     if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
                     
                     bHasNewFrame = true;
-                    image.setFromPixels( eye1.getPixels() );
+                    tempImg = eye1.getPixels() ;
                     
                         if(bIsSmoothing){
-                            image = smoothImage(prevImage, image,smoothing);
-                            prevImage.setFromPixels(image);
+                            image = smoothImage(prevImage, tempImg,smoothing);
+                            prevImage = image;
+                        } else {
+                            image = tempImg;
                         }
                     }else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
                         cout<<"caught a glitch on 1!"<<endl;
                     }
                     
                 }else{
-                    bHasNewFrame = false;
+                    //bHasNewFrame = false;
                 }
                 break;
             case CAM_EYE_2:
@@ -120,11 +136,11 @@ public:
                     if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
                         
                         bHasNewFrame = true;
-                        image.setFromPixels( eye2.getPixels() );
+                        image = eye2.getPixels() ;
                         
                         if(bIsSmoothing){
                             image = smoothImage(prevImage, image,smoothing);
-                            prevImage.setFromPixels(image);
+                            prevImage = image;
                         }
                     }else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
                         cout<<"caught a glitch on 2!"<<endl;
@@ -148,14 +164,48 @@ public:
     
     bool bIsSmoothing = false;
     
-    bool bIsCalculatingCV = true;
+    bool bIsCalculatingCV = false;
     bool bIsCatchingGlitches = false;
-    int glitchThreshold= 100;
+    int glitchThreshold= 50;
     
     camera activeCamera;
     
-    ofImage getFrame(){return image; bHasNewFrame= false;};
-    //ofImage getSmoothed(){return smoothImage(prevImage, image, smoothing); bHasNewFrame= false;};
+   // ofImage getFrame(){return image; bHasNewFrame= false;};
+    ofImage getFrame(){
+        lock();
+        finalImage = image;
+        bHasNewFrame= false;
+        unlock();
+
+        return finalImage;
+
+    };
+    
+    bool getHasNewFrame(){
+        bool _bNewFrame;
+        lock();
+        _bNewFrame = bHasNewFrame;
+        unlock();
+        
+        return _bNewFrame;
+    }
+    
+    int getWidth(){
+        int _width;
+        lock();
+        _width = width;
+        unlock();
+        
+        return _width;
+    }
+    int getHeight(){
+        bool _height;
+        lock();
+        _height = height;
+        unlock();
+        
+        return _height;
+    }
     
     ofxCvGrayscaleImage getCVImg(){};
 
@@ -164,44 +214,60 @@ public:
     void close(){iSight.close();};
     
     void setGain1(float f){
+        lock();
         eye1.setGain(f);
+        unlock();
     }
     void setBrightness1(float f){
+        lock();
         eye1.setBrightness(f);
+        unlock();
     }
     
     void setGain2(float f){
+        lock();
         eye2.setGain(f);
+        unlock();
     }
     void setBrightness2(float f){
+        lock();
         eye2.setBrightness(f);
+        unlock();
     }
+    
+    void setSmoothing(float _smoothing){
+        lock();
+        smoothing = _smoothing;
+        unlock();
+    }
+    
+    
 
     
 private:
     ofVideoGrabber iSight;
     ofxPS3EyeGrabber eye1, eye2;
 
-    ofImage image, prevImage;
+    ofPixels image, prevImage, finalImage;
+    ofPixels smoothedImage;
+
     
     ofxCvGrayscaleImage currentCvImage;
     ofxCvGrayscaleImage prevCvImage;
+    ofxCvGrayscaleImage diff;
+
     float avgDiff;
     
     ofPixels smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing){
-        ofPixels smoothedImage;
-        smoothedImage.allocate(oldPix.getWidth(), oldPix.getHeight(), OF_PIXELS_RGBA);
         
-        
-        
-        for (int i=0; i<smoothedImage.size();i++){
-            try{
+        for (int i=0; i< smoothedImage.size();i++){
+            //try{
                 smoothedImage[i] = (oldPix[i]*smoothing )+ (newPix[i]*(1-smoothing));
-            }catch (...){
+                //cout<<smoothedImage[i]<<endl;
+           // }catch (...){
                 
-            }
+           //  }
         }
-        
         return smoothedImage;
         
     }
@@ -210,16 +276,14 @@ private:
         prevCvImage = currentCvImage;
         currentCvImage.setFromPixels(_pix);
         
-        ofxCvGrayscaleImage diff;
-        diff.allocate(width, height);
-        diff= currentCvImage;
-        diff.absDiff(prevCvImage);
+        diff.absDiff(prevCvImage, currentCvImage);
         
         int val = 0;
-        for(int i=0;i<diff.getPixels().size();i++){
+        int skip =2;
+        for(int i=0;i<diff.getPixels().size();i+=skip){
             val += diff.getPixels()[i] ;
         }
-        avgDiff = val / diff.getPixels().size();
+        avgDiff = val / (diff.getPixels().size()/skip);
         
     }
 };

@@ -21,7 +21,8 @@ public:
     void update();
     void draw();
 private:
-    
+    ofImage img;
+
     CvManager * cvMan;
     ofxSyphonServer * syphon;
 

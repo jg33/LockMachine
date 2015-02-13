@@ -14,21 +14,19 @@ void DifferenceScene::setup(){
 }
 
 void DifferenceScene::update(){
-    if(cvMan->bHasNewFrame){
+    if(cvMan->getHasNewFrame()){
         previousFrame = currentFrame;
         
-        ofImage newImage;
-        newImage.setImageType(OF_IMAGE_COLOR);
+        ofPixels newImage;
+        //newImage.setImageType(OF_IMAGE_COLOR);
         newImage = cvMan->getFrame();
         newImage.setImageType(OF_IMAGE_GRAYSCALE);
         currentFrame.setFromPixels(newImage);
         
         differenceFrame = currentFrame;
         differenceFrame.absDiff(previousFrame);
-    } else{
-        cout<<"no new frame"<<endl;
     }
-   
+    
 }
 
 void DifferenceScene::draw(){

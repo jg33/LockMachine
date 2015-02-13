@@ -13,13 +13,14 @@ void RawScene::setup(){
 }
 
 void RawScene::update(){
-    
+    if(cvMan->getHasNewFrame()){
+        img.setFromPixels(cvMan->getFrame());
+        img.setImageType(OF_IMAGE_GRAYSCALE);
+    }
 }
 
 void RawScene::draw(){
-    ofImage img;
-    img.setFromPixels(cvMan->getFrame());
-    img.setImageType(OF_IMAGE_GRAYSCALE);
+
     
     ofRectangle camDrawRect = ofRectangle(0,0   ,ofGetWidth(),ofGetHeight());
     

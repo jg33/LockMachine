@@ -49,7 +49,9 @@ void ofApp::setup(){
     controlPanel.addSlider("Eye1 Brightness", "1brightness", 32, 0, 63, false);
     controlPanel.addSlider("Eye2 Gain", "2gain", 32, 0, 63, false);
     controlPanel.addSlider("Eye2 Brightness", "2brightness", 32, 0, 63, false);
+    controlPanel.addToggle("Caluclate CV", "calcCv", false);
     controlPanel.addToggle("Glitch Catching", "glitchCatching", false);
+
     
     controlPanel.addPanel("ConvexHull Control",1);
     controlPanel.setWhichPanel("ConvexHull Control");
@@ -82,12 +84,14 @@ void ofApp::setup(){
         //POIs[i] = ofVec3f(ofRandom(ofGetWidth()),ofRandom(ofGetHeight()));
        // POIpower[i] = ofRandom(1);
     }
+    
+    cvMan.startThread();
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    cvMan.update();
+    //cvMan.update();
     
     ofxOscMessage msg;
     
@@ -125,12 +129,13 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     popTransforms();
+    ofSetLineWidth(1);
     //drawControlPanel();
     //drawFramerate(10, 10);
 }
 
 void ofApp::exit(){
-    cvMan.stopThread();
+    cvMan.waitForThread();
 }
 
 void ofApp::onGuiEvent(guiCallbackData & d){
@@ -165,7 +170,7 @@ void ofApp::onGuiEvent(guiCallbackData & d){
     } else if (d.getXmlName() == "ContSimp"){
         hullScene->simplification = d.getFloat(0);
     } else if(d.getXmlName() == "InputSmoothing"){
-        cvMan.smoothing = d.getFloat(0);
+        cvMan.setSmoothing(d.getFloat(0)) ;
     } else if (d.getXmlName() =="1gain"){
         cvMan.setGain1(d.getFloat(0));
     } else if (d.getXmlName() =="1brightness"){
@@ -176,6 +181,8 @@ void ofApp::onGuiEvent(guiCallbackData & d){
         cvMan.setBrightness2(d.getFloat(0));
     } else if (d.getXmlName() == "glitchCatching"){
         cvMan.bIsCatchingGlitches = d.getInt(0);
+    } else if (d.getXmlName() == "calcCv"){
+        cvMan.bIsCalculatingCV = d.getInt(0);
     }
     
 }

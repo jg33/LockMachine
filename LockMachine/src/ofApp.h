@@ -37,7 +37,6 @@ class ofApp : public ofxApp{
 		void gotMessage(ofMessage msg);
 
         void onGuiEvent(guiCallbackData & d);
-    
 
 
 private:

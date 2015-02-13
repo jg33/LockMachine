@@ -55,6 +55,8 @@ public:
 private:
     ofxSyphonServer * syphon;
     
+    int width, height;
+    
     /// CV Stuff ///
     //ofVideoGrabber grabber;
     ofVideoGrabber* cam;

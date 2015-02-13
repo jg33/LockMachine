@@ -44,12 +44,15 @@ void ConvexHullScene::setup(){
     //inputSmoothing = 0.5;
     
     conMan.startThread();
+    
+    width = cvMan->getWidth();
+    height = cvMan->getHeight();
 }
 
 void ConvexHullScene::update(){
     //cam->update();
     
-    if (cvMan->bHasNewFrame){
+    if (cvMan->getHasNewFrame()){
         
         ofxCvGrayscaleImage grey;
         ofxCvColorImage color;
@@ -57,7 +60,7 @@ void ConvexHullScene::update(){
         
         thisFrame.allocate(640 , 480, OF_IMAGE_COLOR);
         thisFrame.setFromPixels( cvMan->getFrame() );
-        color.allocate(cvMan->width, cvMan->height);
+        color.allocate(width, height);
         color.setFromPixels(thisFrame);
         
         thisFrame.setImageType(OF_IMAGE_GRAYSCALE);
@@ -134,7 +137,7 @@ void ConvexHullScene::update(){
 
 void ConvexHullScene::draw(){
     ofBackground(0,10);
-    
+    ofPushMatrix();
     ofTranslate(offsetX, offsetY);
     
     //ofNoFill();
@@ -165,7 +168,7 @@ void ConvexHullScene::draw(){
     
     syphon->publishScreen();
     
-
+    ofPopMatrix();
     
     if(bIsDebug){
         ofRectangle camDrawRect = ofRectangle(ofGetWidth()-320  ,0   ,320,240);
