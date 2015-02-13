@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "ofMain.h"
 #include "ofxPS3EyeGrabber.h"
+#include "ofxOpenCv.h"
 
 enum camera{
     CAM_ISIGHT,
@@ -38,12 +39,15 @@ public:
     
     void setup(){
         activeCamera = CAM_EYE_1;
-        bIsSmoothing = true;
+        bIsSmoothing = false;
         smoothing = 0.7;
         
-        //iSight.setDeviceID(0);
-       // iSight.setup(width,height);
-        
+        if(activeCamera == CAM_ISIGHT){
+            iSight.setDeviceID(0);
+            iSight.setup(width,height);
+        }
+       
+        eye1.setDesiredFrameRate(30);
         image.allocate(width, height, OF_IMAGE_COLOR);
         prevImage.setFromPixels(image);
         
@@ -53,17 +57,36 @@ public:
         eye2.setDeviceID(1);
         eye2.setup(width  , height);
         eye2.setPixelFormat(OF_PIXELS_RGB);
+        
+        currentCvImage.allocate(width  , height);
+        prevCvImage.allocate(width, height);
     }
     
     void update(){
+        
+        if(smoothing<= 0.01){
+            bIsSmoothing=false;
+        } else {
+            bIsSmoothing=true;
+        }
         
         switch (activeCamera){
             case CAM_ISIGHT:
                 iSight.update();
                 if(iSight.isFrameNew()){
-                    bHasNewFrame = true;
-                    image = iSight.getPixels();
                     
+                    updateCv(iSight.getPixels());
+                    if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
+                        bHasNewFrame = true;
+                        image = iSight.getPixels();
+                    
+                        if(bIsSmoothing){
+                            image = smoothImage(prevImage, image, smoothing);
+                            prevImage.setFromPixels(image);
+                        }
+                    } else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
+                        cout<<"caught one!"<<endl;
+                    }
                 } else {
                     bHasNewFrame = false;
                 }
@@ -71,15 +94,42 @@ public:
             case CAM_EYE_1:
                 eye1.update();
                 if(eye1.isFrameNew()){
+                    
+                    if(bIsCalculatingCV) updateCv(eye1.getPixels());
+                    if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
+                    
                     bHasNewFrame = true;
                     image.setFromPixels( eye1.getPixels() );
-                }else{}
+                    
+                        if(bIsSmoothing){
+                            image = smoothImage(prevImage, image,smoothing);
+                            prevImage.setFromPixels(image);
+                        }
+                    }else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
+                        cout<<"caught a glitch on 1!"<<endl;
+                    }
+                    
+                }else{
+                    bHasNewFrame = false;
+                }
                 break;
             case CAM_EYE_2:
                 eye2.update();
                 if(eye2.isFrameNew()){
-                    bHasNewFrame = true;
-                    image.setFromPixels( eye2.getPixels() );
+                    if(bIsCalculatingCV) updateCv(eye1.getPixels());
+                    if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
+                        
+                        bHasNewFrame = true;
+                        image.setFromPixels( eye2.getPixels() );
+                        
+                        if(bIsSmoothing){
+                            image = smoothImage(prevImage, image,smoothing);
+                            prevImage.setFromPixels(image);
+                        }
+                    }else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
+                        cout<<"caught a glitch on 2!"<<endl;
+                    }
+                    
                 }else{}
                 break;
             default:
@@ -88,10 +138,7 @@ public:
                 
         }
         
-        if(bIsSmoothing){
-            image = smoothImage(prevImage, image, smoothing);
-            prevImage.setFromPixels(image);
-        }
+
         
     }
     
@@ -99,12 +146,18 @@ public:
     
     bool bHasNewFrame = false ;
     
-    bool bIsSmoothing;
+    bool bIsSmoothing = false;
+    
+    bool bIsCalculatingCV = true;
+    bool bIsCatchingGlitches = false;
+    int glitchThreshold= 100;
     
     camera activeCamera;
     
     ofImage getFrame(){return image; bHasNewFrame= false;};
     //ofImage getSmoothed(){return smoothImage(prevImage, image, smoothing); bHasNewFrame= false;};
+    
+    ofxCvGrayscaleImage getCVImg(){};
 
     float smoothing;
 
@@ -131,6 +184,9 @@ private:
 
     ofImage image, prevImage;
     
+    ofxCvGrayscaleImage currentCvImage;
+    ofxCvGrayscaleImage prevCvImage;
+    float avgDiff;
     
     ofPixels smoothImage(ofPixels oldPix, ofPixels newPix, float smoothing){
         ofPixels smoothedImage;
@@ -147,6 +203,23 @@ private:
         }
         
         return smoothedImage;
+        
+    }
+    
+    void updateCv(ofPixels _pix){
+        prevCvImage = currentCvImage;
+        currentCvImage.setFromPixels(_pix);
+        
+        ofxCvGrayscaleImage diff;
+        diff.allocate(width, height);
+        diff= currentCvImage;
+        diff.absDiff(prevCvImage);
+        
+        int val = 0;
+        for(int i=0;i<diff.getPixels().size();i++){
+            val += diff.getPixels()[i] ;
+        }
+        avgDiff = val / diff.getPixels().size();
         
     }
 };

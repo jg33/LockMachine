@@ -29,13 +29,13 @@ void ConeScene::update(){
             }
         }
     }
-    size = pixCount*0.001;
+    size = pixCount*0.1;
 }
 
 void ConeScene::draw(){
     ofBackground(0);
     ofNoFill();
-    ofSetLineWidth(2);
+    ofSetLineWidth(5);
     ofSetCircleResolution(100);
     ofDrawEllipse(ofGetWidth()/2, ofGetHeight()/2, size, size);
     

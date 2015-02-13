@@ -41,7 +41,7 @@ void ConvexHullScene::setup(){
     setCvSettings(50, 500, 500);
     cvThreshold = 50;
     maxDist = 50;
-    inputSmoothing = 0.5;
+    //inputSmoothing = 0.5;
     
     conMan.startThread();
 }
@@ -140,7 +140,7 @@ void ConvexHullScene::draw(){
     //ofNoFill();
     //ofSetLineWidth(10);
     ofSetColor(255);
-    
+    ofSetLineWidth(1);
     
     for (int i=0; i<hulls.size(); i++) { //loop through all the hulls
         ofPolyline p;

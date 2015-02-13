@@ -14,7 +14,7 @@
 #include "ofxSyphon.h"
 #include "CvManager.h"
 
-#define THRESHOLD 200
+#define THRESHOLD 150
 
 class ConeScene: public ofxScene{
 public:

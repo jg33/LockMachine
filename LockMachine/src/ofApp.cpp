@@ -22,8 +22,8 @@ void ofApp::setup(){
     circles = (CircleScene*) sceneManager.add(new CircleScene());
     partScene = (ParticleScene*) sceneManager.add(new ParticleScene(&syphonServe));
     hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&cvMan, &syphonServe));
-    containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&cvMan, &syphonServe));
-    flow = (FlowScene*) sceneManager.add(new FlowScene(&cvMan, &syphonServe));
+    //containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&cvMan, &syphonServe));
+    //flow = (FlowScene*) sceneManager.add(new FlowScene(&cvMan, &syphonServe));
     web = (WebScene*) sceneManager.add(new WebScene() );
     
     sceneManager.add(new RawScene(&cvMan, &syphonServe));
@@ -31,7 +31,7 @@ void ofApp::setup(){
     sceneManager.add(new DifferenceScene(&cvMan, &syphonServe));
     sceneManager.add(new MeshBuildScene(&cvMan, &syphonServe));
     
-    sceneManager.gotoScene("MeshBuildScene", true);
+    sceneManager.gotoScene("RawFeed", true);
     sceneManager.setup(true);
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     setSceneManager(&sceneManager);
@@ -49,6 +49,7 @@ void ofApp::setup(){
     controlPanel.addSlider("Eye1 Brightness", "1brightness", 32, 0, 63, false);
     controlPanel.addSlider("Eye2 Gain", "2gain", 32, 0, 63, false);
     controlPanel.addSlider("Eye2 Brightness", "2brightness", 32, 0, 63, false);
+    controlPanel.addToggle("Glitch Catching", "glitchCatching", false);
     
     controlPanel.addPanel("ConvexHull Control",1);
     controlPanel.setWhichPanel("ConvexHull Control");
@@ -170,9 +171,11 @@ void ofApp::onGuiEvent(guiCallbackData & d){
     } else if (d.getXmlName() =="1brightness"){
         cvMan.setBrightness1(d.getFloat(0));
     } else if (d.getXmlName() =="2gain"){
-        cvMan.setGain1(d.getFloat(0));
+        cvMan.setGain2(d.getFloat(0));
     } else if (d.getXmlName() =="2brightness"){
-        cvMan.setBrightness1(d.getFloat(0));
+        cvMan.setBrightness2(d.getFloat(0));
+    } else if (d.getXmlName() == "glitchCatching"){
+        cvMan.bIsCatchingGlitches = d.getInt(0);
     }
     
 }
@@ -183,7 +186,7 @@ void ofApp::keyPressed(int key){
             case 'd':
             bDebug = !bDebug;
             hullScene->bIsDebug = bDebug;
-            containment->bIsDebug = bDebug;
+            //]containment->bIsDebug = bDebug;
             break;
             case 'g':
             hullScene->bIsGrabbingBackground = !hullScene->bIsGrabbingBackground;
@@ -199,6 +202,12 @@ void ofApp::keyPressed(int key){
             break;
             case'p':
             partScene->partsToAdd = ofRandom(25,40);
+            break;
+            case '1':
+            cvMan.activeCamera= CAM_EYE_1;
+            break;
+            case '2':
+            cvMan.activeCamera = CAM_EYE_2;
             break;
     }
     if(sceneManager.getCurrentSceneName() == "Particles"){
