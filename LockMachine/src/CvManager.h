@@ -40,7 +40,7 @@ public:
     void setup(){
         activeCamera = CAM_EYE_1;
         bIsSmoothing = false;
-        smoothing = 0;
+        smoothing = 0.85;
         
         if(activeCamera == CAM_ISIGHT){
             iSight.setDeviceID(0);
@@ -132,15 +132,17 @@ public:
             case CAM_EYE_2:
                 eye2.update();
                 if(eye2.isFrameNew()){
-                    if(bIsCalculatingCV) updateCv(eye1.getPixels());
+                    if(bIsCalculatingCV) updateCv(eye2.getPixels());
                     if(!bIsCatchingGlitches || avgDiff < glitchThreshold){
                         
                         bHasNewFrame = true;
-                        image = eye2.getPixels() ;
+                        tempImg = eye2.getPixels() ;
                         
                         if(bIsSmoothing){
-                            image = smoothImage(prevImage, image,smoothing);
+                            image = smoothImage(prevImage, tempImg,smoothing);
                             prevImage = image;
+                        } else {
+                            image = tempImg;
                         }
                     }else if(bIsCatchingGlitches && avgDiff > glitchThreshold) {
                         cout<<"caught a glitch on 2!"<<endl;
@@ -164,9 +166,9 @@ public:
     
     bool bIsSmoothing = false;
     
-    bool bIsCalculatingCV = false;
-    bool bIsCatchingGlitches = false;
-    int glitchThreshold= 50;
+    bool bIsCalculatingCV = true;
+    bool bIsCatchingGlitches = true;
+    int glitchThreshold= 10;
     
     camera activeCamera;
     
@@ -311,7 +313,8 @@ public:
                     if(bDrawInternal){
                         for(int k =j;k<tempHulls[i].size();k++){ //each of those looks through its other points
                             ofPoint thatPoint = tempHulls[i][k];
-                            if (thisPoint.distance(thatPoint) < maxDist) tempInternalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
+                            
+                            if (thisPoint.distance(thatPoint) < maxDist && thisPoint != thatPoint) tempInternalConnections.push_back( pair<ofPoint, ofPoint>(thisPoint,thatPoint));
                         }
                     }
                     if(bDrawExternal){

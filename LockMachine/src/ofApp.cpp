@@ -3,31 +3,23 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     syphonServe.setName("Lock Machine");
+    rawServer.setName("Raw Feed");
     oscIn.setup(6666);
-    ofSetVerticalSync(true);
-    ofSetSmoothLighting(true);
 
     
-    ///CAMERA////
-    //cam = ofVideoGrabber();
-    
-    //grabber.setDeviceID(1);
-    //grabber.setup(640, 480);
+    ofSetVerticalSync(true);
+    ofSetSmoothLighting(true);
     
     cvMan.setup();
-    //cvMan.startThread();
 
     
     ///SCENE STUFF///
-    circles = (CircleScene*) sceneManager.add(new CircleScene());
-    partScene = (ParticleScene*) sceneManager.add(new ParticleScene(&syphonServe));
+    //circles = (CircleScene*) sceneManager.add(new CircleScene());
+    //partScene = (ParticleScene*) sceneManager.add(new ParticleScene(&syphonServe));
     hullScene = (ConvexHullScene*) sceneManager.add(new ConvexHullScene(&cvMan, &syphonServe));
-    //containment = (ContainmentPairScene*) sceneManager.add(new ContainmentPairScene(&cvMan, &syphonServe));
-    //flow = (FlowScene*) sceneManager.add(new FlowScene(&cvMan, &syphonServe));
-    web = (WebScene*) sceneManager.add(new WebScene() );
-    
+    //web = (WebScene*) sceneManager.add(new WebScene() );
     sceneManager.add(new RawScene(&cvMan, &syphonServe));
-    sceneManager.add(new ConeScene(&cvMan, &syphonServe));
+    //sceneManager.add(new ConeScene(&cvMan, &syphonServe));
     sceneManager.add(new DifferenceScene(&cvMan, &syphonServe));
     sceneManager.add(new MeshBuildScene(&cvMan, &syphonServe));
     
@@ -44,26 +36,25 @@ void ofApp::setup(){
     
     controlPanel.addPanel("Camera Control", 1);
     controlPanel.setWhichPanel("Camera Control");
-    controlPanel.addSlider("Input Smoothing", "InputSmoothing", 0.7, 0, 1, false);
+    controlPanel.addSlider("Input Smoothing", "InputSmoothing", 0.9, 0, 1, false);
     controlPanel.addSlider("Eye1 Gain", "1gain", 32, 0, 63, false);
     controlPanel.addSlider("Eye1 Brightness", "1brightness", 32, 0, 63, false);
     controlPanel.addSlider("Eye2 Gain", "2gain", 32, 0, 63, false);
     controlPanel.addSlider("Eye2 Brightness", "2brightness", 32, 0, 63, false);
-    controlPanel.addToggle("Caluclate CV", "calcCv", false);
-    controlPanel.addToggle("Glitch Catching", "glitchCatching", false);
-
+    controlPanel.addToggle("Caluclate CV", "calcCv", true);
+    controlPanel.addToggle("Glitch Catching", "glitchCatching", true);
     
     controlPanel.addPanel("ConvexHull Control",1);
     controlPanel.setWhichPanel("ConvexHull Control");
     controlPanel.addSlider2D("Hulls Offset", "hullOffset", 0, 0, -500, 500, -500, 500, true);
     controlPanel.addSlider("CV Threshold", "cvThreshold", 50, 0, 100, true);
     controlPanel.addSlider("Min CV Contours", "cvMin", 100, 0, 200, true);
-    controlPanel.addSlider("Max CV Contours", "cvMax", 3000, 100, 100000, true);
+    controlPanel.addSlider("Max CV Contours", "cvMax", 7000, 100, 100000, true);
     controlPanel.addSlider("Num CV Considered", "cvNConsidered", 1000, 0, 2400, true);
-    controlPanel.addToggle("Draw Internals", "drawInternals", false);
-    controlPanel.addToggle("Draw Externals", "drawExternals", false);
-    controlPanel.addSlider("Maximum Distance", "MaxDist", 50, 0, 100, true);
-    controlPanel.addSlider("Contour Simplificaiton", "ContSimp", 5, 0, 30, false);
+    controlPanel.addToggle("Draw Internals", "drawInternals", true);
+    controlPanel.addToggle("Draw Externals", "drawExternals", true);
+    controlPanel.addSlider("Maximum Distance", "MaxDist", 70, 0, 100, true);
+    controlPanel.addSlider("Contour Simplificaiton", "ContSimp", 3, 0, 30, false);
 
     controlPanel.addPanel("Extras", 1);
     controlPanel.setWhichPanel("Extras");
@@ -97,32 +88,12 @@ void ofApp::update(){
     
     while (oscIn.hasWaitingMessages()){
         oscIn.getNextMessage(&msg);
-        vector<string> address = ofSplitString(msg.getAddress(),"/");
-
-        if(address[1] == "mic"){
-          //  micInputs[ofToInt(address[2])]= msg.getArgAsFloat(0);
-            cout<< msg.getAddress() <<endl;
-            
-        } else if ( address[1] == "dancer"){
-         //   dancers[ofToInt(address[2])] = ofVec3f(msg.getArgAsFloat(0),msg.getArgAsFloat(1),msg.getArgAsFloat(2));
-        } else if (address[1] == "POI" && address[3] == "pos"){
-          //  POIs[ofFromString<int>(address[2])] = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
-            
-        } else if(address[1] == "POI" && address[3] == "power"){
-           // POIpower[ofFromString<int>(address[2])] = msg.getArgAsFloat(0);
-        } else if(address[1] == "leftBlob" && address[2] == "size"){
-            containment->setWiggle(LEFT, msg.getArgAsFloat(0));
-        }
+        processOsc(msg);
         
     }
     
     
-    
-    
-    //circles->setSizes(micInputs);
-    //connections->setPoints(&POIs);
-    
-    ofSetWindowTitle(sceneManager.getCurrentSceneName()+" @ "+  ofToString(ofGetFrameRate()));
+    ofSetWindowTitle(sceneManager.getCurrentSceneName()+" @ "+  ofToString(ofGetFrameRate())+ " | grabbingBG: "+ ofToString(hullScene->bIsGrabbingBackground) );
     
 }
 
@@ -132,6 +103,7 @@ void ofApp::draw(){
     ofSetLineWidth(1);
     //drawControlPanel();
     //drawFramerate(10, 10);
+    rawServer.publishTexture(&cvMan.getFrame().getTexture());
 }
 
 void ofApp::exit(){
@@ -183,8 +155,69 @@ void ofApp::onGuiEvent(guiCallbackData & d){
         cvMan.bIsCatchingGlitches = d.getInt(0);
     } else if (d.getXmlName() == "calcCv"){
         cvMan.bIsCalculatingCV = d.getInt(0);
+    } else{
+        cout<<"unknown UI event: "<<d.getXmlName()<<endl;
     }
     
+}
+
+void ofApp::processOsc(ofxOscMessage &msg){
+    
+    vector<string> address = ofSplitString(msg.getAddress(),"/");
+    
+    if(address[1]=="gui"){
+        guiCallbackData oscGuiEvent;
+        oscGuiEvent.setup(address[2],address[2]);
+        oscGuiEvent.addValueF(msg.getArgAsFloat(0));
+        onGuiEvent(oscGuiEvent);
+    }
+    
+    /*
+    if(address[1] == "camera"){
+        cout<<"CaM!"<<endl;
+        switch (msg.getArgAsInt32(0)) {
+            case 1:
+                cvMan.activeCamera = CAM_EYE_1;
+                break;
+            case 2:
+                cvMan.activeCamera = CAM_EYE_2;
+                break;
+            default:
+                break;
+        }
+    }
+     */
+    
+    if(address[1] == "mic"){
+        //  micInputs[ofToInt(address[2])]= msg.getArgAsFloat(0);
+        cout<< msg.getAddress() <<endl;
+        
+    } else if ( address[1] == "dancer"){
+        //   dancers[ofToInt(address[2])] = ofVec3f(msg.getArgAsFloat(0),msg.getArgAsFloat(1),msg.getArgAsFloat(2));
+    } else if (address[1] == "POI" && address[3] == "pos"){
+        //  POIs[ofFromString<int>(address[2])] = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
+        
+    } else if(address[1] == "POI" && address[3] == "power"){
+        // POIpower[ofFromString<int>(address[2])] = msg.getArgAsFloat(0);
+    } else if(address[1] == "leftBlob" && address[2] == "size"){
+        containment->setWiggle(LEFT, msg.getArgAsFloat(0));
+    } else if(address[1] == "camera"){
+        switch (msg.getArgAsInt32(0)) {
+                cout<<msg.getArgAsInt32(0)<<endl;
+            case 1:
+                cvMan.activeCamera = CAM_EYE_1;
+                break;
+            case 2:
+                cvMan.activeCamera = CAM_EYE_2;
+                break;
+            default:
+                break;
+        }
+    }
+
+    
+    cout<< address[1]<< endl;
+
 }
 
 //--------------------------------------------------------------

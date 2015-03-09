@@ -19,5 +19,6 @@
 #include "ConeScene.h"
 #include "DifferenceScene.h"
 #include "MeshBuildScene.h"
+#include "AccumulationScene.h"
 
 #endif

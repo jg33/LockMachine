@@ -38,9 +38,11 @@ class ofApp : public ofxApp{
 
         void onGuiEvent(guiCallbackData & d);
 
+        void processOsc(ofxOscMessage & msg);
 
 private:
     ofxSyphonServer syphonServe;
+    ofxSyphonServer rawServer;
     ofxOscReceiver oscIn;
     
     ofxSceneManager sceneManager;

@@ -33,14 +33,14 @@ void ConvexHullScene::setup(){
     offsetX=0;
     offsetY=0;
     
-    bDrawExternal=false;
-    bDrawInternal=false;
+    bDrawExternal=true;
+    bDrawInternal=true;
     
     ofEnableAlphaBlending();
     
-    setCvSettings(50, 500, 500);
+    setCvSettings(200, 3000, 500);
     cvThreshold = 50;
-    maxDist = 50;
+    maxDist = 80;
     //inputSmoothing = 0.5;
     
     conMan.startThread();
@@ -68,7 +68,10 @@ void ConvexHullScene::update(){
         //color.convertToGrayscalePlanarImage(grey, 0);
         grey.setFromPixels(thisFrame);
         
-
+        grey.resize(1280, 720);
+        cvImg.resize(1280,720);
+        background.resize(1280,720);
+        
         currentFrame.setFromPixels(grey.getPixels());
         
         cvImg.setFromPixels(currentFrame.getPixels());
@@ -143,7 +146,7 @@ void ConvexHullScene::draw(){
     //ofNoFill();
     //ofSetLineWidth(10);
     ofSetColor(255);
-    ofSetLineWidth(1);
+    ofSetLineWidth(2);
     
     for (int i=0; i<hulls.size(); i++) { //loop through all the hulls
         ofPolyline p;
@@ -277,10 +280,11 @@ void ConvexHullScene::drawConnections(){
     ofMesh poly;
     poly.setMode(OF_PRIMITIVE_LINES);
     poly.setupIndicesAuto();
+
     if(bDrawInternal){
         
         for (int i=0; i<internalConnections.size(); i++) {
-            ofFloatColor thisColor = ofColor(255,ofMap(externalConnections[i].first.distance(externalConnections[i].second), 0, maxDist,255,0) );            //ofDrawLine(internalConnections[i].first, internalConnections[i].second);
+            ofFloatColor thisColor = ofColor(255,ofMap(internalConnections[i].first.distance(internalConnections[i].second), 0, maxDist,255,0) );            //ofDrawLine(internalConnections[i].first, internalConnections[i].second);
             poly.addVertex(internalConnections[i].first);
             poly.addColor(thisColor);
             poly.addVertex(internalConnections[i].second);
